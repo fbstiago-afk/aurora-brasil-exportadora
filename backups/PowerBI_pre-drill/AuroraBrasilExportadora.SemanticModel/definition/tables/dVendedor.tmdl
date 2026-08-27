@@ -1,0 +1,113 @@
+/// Dimensao da equipe comercial com hierarquia Diretor > Gerente Regional > Executivo de Contas.
+table dVendedor
+	lineageTag: 4c8a0e7c-fb45-e9cf-a3b8-a283e6f4c68e
+
+	column VendedorID
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 4b450d57-4076-3d58-5ac4-85bd522101a6
+		summarizeBy: none
+		sourceColumn: VendedorID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoVendedor
+		dataType: string
+		lineageTag: fbbc948b-6378-7138-a816-bdf95e809716
+		summarizeBy: none
+		sourceColumn: CodigoVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column NomeVendedor
+		dataType: string
+		lineageTag: e489b324-ada9-d804-a726-2d194fbb98f7
+		summarizeBy: none
+		sourceColumn: NomeVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cargo
+		dataType: string
+		lineageTag: bab803f8-278c-a4b5-0199-a6933f8b5c6b
+		summarizeBy: none
+		sourceColumn: Cargo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gerente
+		dataType: string
+		lineageTag: 47854a83-3226-22ff-0f61-e78e8f3b7c1c
+		summarizeBy: none
+		sourceColumn: Gerente
+
+		annotation SummarizationSetBy = Automatic
+
+	column RegiaoResponsavel
+		dataType: string
+		lineageTag: fa1ecec8-d965-9b79-9090-4461357d87d6
+		summarizeBy: none
+		sourceColumn: RegiaoResponsavel
+
+		annotation SummarizationSetBy = Automatic
+
+	column ContinenteResponsavel
+		dataType: string
+		lineageTag: af6c3a92-b028-43bc-ffc5-145a8829f4a5
+		summarizeBy: none
+		sourceColumn: ContinenteResponsavel
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataAdmissao
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: a7735cfa-9726-0267-64df-b401f7286f08
+		summarizeBy: none
+		sourceColumn: DataAdmissao
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column MetaAnualUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: dbc9249c-dd19-9e4e-e498-b3d0685a770f
+		summarizeBy: sum
+		sourceColumn: MetaAnualUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: edc33d28-001a-e4e7-b9c3-9415cedef9d2
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dVendedor = m
+		mode: import
+		source =
+				let
+				    Origem = Csv.Document(
+				        File.Contents(pBasePath & "dVendedor.csv"),
+				        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+				    TiposAplicados = Table.TransformColumnTypes(
+				        CabecalhoPromovido,
+				        {{"VendedorID", Int64.Type},{"CodigoVendedor", type text},{"NomeVendedor", type text},{"Cargo", type text},{"Gerente", type text},{"RegiaoResponsavel", type text},{"ContinenteResponsavel", type text},{"DataAdmissao", type date},{"MetaAnualUSD", type number},{"Status", type text}},
+				        "pt-BR"
+				    ),
+				    ErrosTratados = Table.ReplaceErrorValues(
+				        TiposAplicados,
+				        List.Transform(Table.ColumnNames(TiposAplicados), each {_, null})
+				    )
+				in
+				    ErrosTratados
+
+	annotation PBI_ResultType = Table
+

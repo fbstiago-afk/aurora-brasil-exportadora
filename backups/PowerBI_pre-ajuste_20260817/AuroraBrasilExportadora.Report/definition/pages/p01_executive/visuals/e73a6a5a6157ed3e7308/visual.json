@@ -1,0 +1,126 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "e73a6a5a6157ed3e7308",
+  "position": {
+    "x": 1016,
+    "y": 502,
+    "z": 1,
+    "width": 244,
+    "height": 198,
+    "tabOrder": 34
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "LEITURA DO PERIODO\n",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "fontFamily": "Segoe UI",
+                      "fontWeight": "bold",
+                      "color": "#C8763C"
+                    }
+                  },
+                  {
+                    "value": "Use a area ao lado para diagnosticar. Os textos abaixo sao calculados em DAX e refletem os filtros ativos.\n\n",
+                    "textStyle": {
+                      "fontSize": "8.5pt",
+                      "fontFamily": "Segoe UI",
+                      "color": "#5D6E75"
+                    }
+                  },
+                  {
+                    "value": "Consulte as medidas: Texto Insight Crescimento, Texto Insight Margem e Alerta Rota Critica na pasta 14 Inteligencia Comercial.",
+                    "textStyle": {
+                      "fontSize": "8.5pt",
+                      "fontFamily": "Segoe UI",
+                      "color": "#5D6E75"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E9E1D4'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Bloco de texto'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

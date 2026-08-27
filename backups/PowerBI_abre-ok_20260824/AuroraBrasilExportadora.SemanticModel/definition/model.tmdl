@@ -1,0 +1,49 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup '00 Parametros'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup '01 Dimensoes'
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup '02 Fatos'
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup '90 Auxiliares'
+
+	annotation PBI_QueryGroupOrder = 3
+
+annotation PBI_QueryOrder = ["pBasePath", "dCalendario", "dCliente", "dProduto", "dVendedor", "dPais", "dPorto", "dTransportadora", "fVendas", "fEmbarques", "fCambio", "fMetas", "fOrcamento", "fForecast", "fRecebimentos", "_Medidas"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dCalendario
+ref table dCliente
+ref table dProduto
+ref table dVendedor
+ref table dPais
+ref table dPorto
+ref table dTransportadora
+ref table fVendas
+ref table fEmbarques
+ref table fCambio
+ref table fMetas
+ref table fOrcamento
+ref table fForecast
+ref table fRecebimentos
+ref table _Medidas
+
+ref cultureInfo pt-BR
+

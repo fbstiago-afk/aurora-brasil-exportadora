@@ -1,0 +1,24 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
+  "pageOrder": [
+    "p01_executive",
+    "p02_sales",
+    "p03_customers",
+    "p04_potential",
+    "p05_products",
+    "p06_markets",
+    "p07_profit",
+    "p08_logistics",
+    "p09_team",
+    "p10_finance",
+    "p11_forecast",
+    "tt_cliente",
+    "tt_produto",
+    "tt_pais",
+    "tt_vendedor",
+    "dt_cliente",
+    "dt_pais"
+  ],
+  "activePageName": "p01_executive",
+  "landingPageName": "p01_executive"
+}

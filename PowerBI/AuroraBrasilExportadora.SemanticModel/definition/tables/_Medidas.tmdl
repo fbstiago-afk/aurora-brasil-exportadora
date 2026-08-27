@@ -1,0 +1,3139 @@
+/// Tabela dedicada as medidas DAX. Nao contem dados analiticos.
+table _Medidas
+	lineageTag: 686b13ed-c80f-8a85-53e1-2b73d625ff6f
+
+	/// Faturamento bruto em USD antes de descontos comerciais.
+	measure 'Receita Bruta USD' = SUM(fVendas[ReceitaBrutaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: 47651f61-4d2e-5e7d-b858-dc99a6c6cad4
+
+	/// Total de descontos comerciais concedidos.
+	measure 'Descontos USD' = SUM(fVendas[DescontoUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: 6921155b-4f0f-0f0f-3ee9-96f07d44588e
+
+	measure 'Desconto %' = DIVIDE([Descontos USD], [Receita Bruta USD])
+		formatString: #,0.0 %
+		displayFolder: 01 Receita
+		lineageTag: 1645ac19-07f1-1b91-2ee4-7faceee2146b
+
+	/// Receita liquida em USD. Medida base de todo o relatorio.
+	measure 'Receita USD' = SUM(fVendas[ReceitaLiquidaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: 2aeb2c55-e7b0-8ba4-eae7-cf60ce889572
+
+	/// Receita liquida convertida a BRL pela taxa da data de faturamento.
+	measure 'Receita BRL' = SUM(fVendas[ReceitaLiquidaBRL])
+		formatString: "R$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: 4254d4cd-b3ec-22d5-b357-e195be76daa6
+
+	measure 'Receita por Kg' = DIVIDE([Receita USD], [Peso Total Kg])
+		formatString: "US$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: 52d8d30b-25e8-7c60-3e4b-413a19c42d83
+
+	measure 'Receita Pedido' = SUM(fVendas[ReceitaLiquidaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: 81a6a1fc-30db-5ab8-1ff8-690a97703caf
+
+	/// Receita reconhecida pela data do pedido (relacionamento inativo).
+	measure 'Receita por Data de Pedido' = CALCULATE([Receita USD], USERELATIONSHIP(dCalendario[Data], fVendas[DataPedido]))
+		formatString: "US$ "#,0.00
+		displayFolder: 01 Receita
+		lineageTag: cb26c16f-f30a-6fdb-c6ae-527e643f0fad
+
+	measure 'Receita LY' = CALCULATE([Receita USD], SAMEPERIODLASTYEAR(dCalendario[Data]))
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: 5ce7a15b-8e58-a7ba-53b0-834d62b30ff6
+
+	measure 'Receita YoY' = [Receita USD] - [Receita LY]
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: 8d611ccc-a448-2456-334a-1f7c9e71ab46
+
+	measure 'Receita YoY %' = DIVIDE([Receita YoY], [Receita LY])
+		formatString: #,0.0 %
+		displayFolder: 02 Crescimento
+		lineageTag: ad59b387-1951-f144-081f-56268a5549b1
+
+	measure 'Receita PM' = CALCULATE([Receita USD], DATEADD(dCalendario[Data], -1, MONTH))
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: a02e4f24-922e-3673-f31b-52ec03b5c3cb
+
+	measure 'Receita MoM' = [Receita USD] - [Receita PM]
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: 53a2814e-11ea-bb43-ce12-7b7688071ea5
+
+	measure 'Receita MoM %' = DIVIDE([Receita MoM], [Receita PM])
+		formatString: #,0.0 %
+		displayFolder: 02 Crescimento
+		lineageTag: 96edc7be-a1bd-1070-1b20-aec735ea9252
+
+	measure 'Receita YTD' = TOTALYTD([Receita USD], dCalendario[Data])
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: 804a2393-0d7f-b1ed-b37d-718ce9c08fe9
+
+	measure 'Receita YTD LY' = CALCULATE([Receita YTD], SAMEPERIODLASTYEAR(dCalendario[Data]))
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: aafdc414-cc95-ae18-2cb6-b1ec69227e8a
+
+	measure 'Receita YTD YoY %' = DIVIDE([Receita YTD] - [Receita YTD LY], [Receita YTD LY])
+		formatString: #,0.0 %
+		displayFolder: 02 Crescimento
+		lineageTag: e9103b86-d0de-f47d-79e1-19122f1126cf
+
+	measure 'Receita Rolling 3M' = CALCULATE([Receita USD], DATESINPERIOD(dCalendario[Data], MAX(dCalendario[Data]), -3, MONTH))
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: 278dc623-a9ad-040f-e376-39a1bd8fe8db
+
+	measure 'Receita Rolling 6M' = CALCULATE([Receita USD], DATESINPERIOD(dCalendario[Data], MAX(dCalendario[Data]), -6, MONTH))
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: 99fc4a4c-cb23-18bc-f588-2514f7744926
+
+	measure 'Receita Rolling 12M' = CALCULATE([Receita USD], DATESINPERIOD(dCalendario[Data], MAX(dCalendario[Data]), -12, MONTH))
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: fcbf684a-efc5-b396-9c14-11c5ad46e3dd
+
+	measure 'Receita Media Mensal 12M' = DIVIDE([Receita Rolling 12M], 12)
+		formatString: "US$ "#,0.00
+		displayFolder: 02 Crescimento
+		lineageTag: cdfe2189-b648-cf5c-6fad-b86e3cb441d6
+
+	measure 'CAGR Receita' =
+			VAR _Ini = CALCULATE([Receita USD], ALL(dCalendario), dCalendario[Ano] = MIN(dCalendario[Ano]))
+			VAR _Fim = CALCULATE([Receita USD], ALL(dCalendario), dCalendario[Ano] = MAX(dCalendario[Ano]))
+			VAR _N = MAX(dCalendario[Ano]) - MIN(dCalendario[Ano])
+			RETURN IF(_N > 0 && _Ini > 0, ( _Fim / _Ini ) ^ DIVIDE(1, _N) - 1)
+		formatString: #,0.0 %
+		displayFolder: 02 Crescimento
+		lineageTag: 28bdbf3d-9230-37bf-e906-3c4be20a8035
+
+	/// Variacao da margem percentual em pontos percentuais versus ano anterior.
+	measure 'Margem YoY p.p.' = [Margem Bruta %] - CALCULATE([Margem Bruta %], SAMEPERIODLASTYEAR(dCalendario[Data]))
+		formatString: #,0.0
+		displayFolder: 02 Crescimento
+		lineageTag: bcc5fd18-9c21-b483-de78-b8ce1462d4de
+
+	measure 'Volume YoY %' =
+			VAR _LY = CALCULATE([Peso Total Kg], SAMEPERIODLASTYEAR(dCalendario[Data]))
+			RETURN DIVIDE([Peso Total Kg] - _LY, _LY)
+		formatString: #,0.0 %
+		displayFolder: 02 Crescimento
+		lineageTag: 56337ee6-56b7-e770-8fd4-5b5127b0b004
+
+	measure Quantidade = SUM(fVendas[Quantidade])
+		formatString: #,0
+		displayFolder: 03 Volume
+		lineageTag: 85f2e638-d6cb-71e3-1790-df1efe241a9d
+
+	measure 'Peso Total Kg' = SUM(fVendas[PesoTotalKg])
+		formatString: #,0.0
+		displayFolder: 03 Volume
+		lineageTag: de1cc2ef-160a-eebe-e68b-f085092cd43d
+
+	measure Toneladas = DIVIDE([Peso Total Kg], 1000)
+		formatString: #,0.0
+		displayFolder: 03 Volume
+		lineageTag: caf21779-c894-b4a2-1428-b7adc373b60c
+
+	measure Pedidos = DISTINCTCOUNT(fVendas[PedidoID])
+		formatString: #,0
+		displayFolder: 03 Volume
+		lineageTag: 84f85780-0e3f-eada-fec3-cf8c18c6284f
+
+	measure 'Linhas de Pedido' = COUNTROWS(fVendas)
+		formatString: #,0
+		displayFolder: 03 Volume
+		lineageTag: d3f37665-66a8-aed7-af9a-49aa4fee2aba
+
+	measure 'Ticket Medio USD' = DIVIDE([Receita USD], [Pedidos])
+		formatString: "US$ "#,0.00
+		displayFolder: 03 Volume
+		lineageTag: 1655655d-a86c-4b76-6abc-5f23c44f57fc
+
+	measure 'Ticket Medio BRL' = DIVIDE([Receita BRL], [Pedidos])
+		formatString: "R$ "#,0.00
+		displayFolder: 03 Volume
+		lineageTag: 1ec7eec9-083f-fb41-77cf-c2102c2e0055
+
+	measure 'Preco Medio por Kg' = DIVIDE([Receita Bruta USD], [Peso Total Kg])
+		formatString: "US$ "#,0.00
+		displayFolder: 03 Volume
+		lineageTag: e65b5502-607a-fb77-0fd7-e298f78d9fb3
+
+	measure 'Custo Produto USD' = SUM(fVendas[CustoProdutoUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: 9339fc2d-e51a-aea8-68a1-3704e9fd77b9
+
+	measure 'Frete USD' = SUM(fVendas[FreteUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: 08f653cf-7e68-e42a-a6a2-c516cbaab6fa
+
+	measure 'Seguro USD' = SUM(fVendas[SeguroUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: be227379-9b51-b61b-447d-35df01fe7016
+
+	measure 'Despesas Exportacao USD' = SUM(fVendas[DespesasExportacaoUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: 8a3125c7-365a-a471-9564-36208cf56a87
+
+	measure 'Custo Total USD' = SUM(fVendas[CustoTotalUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: 30dce2c8-6ac3-41c2-2201-ec062606135c
+
+	/// Receita liquida menos custo de produto, frete, seguro e despesas de exportacao.
+	measure 'Margem Bruta USD' = SUM(fVendas[MargemBrutaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: c23d43ca-2a2f-b623-741b-168487ecb2b4
+
+	measure 'Margem Bruta BRL' = SUMX(fVendas, fVendas[MargemBrutaUSD] * fVendas[TaxaCambio])
+		formatString: "R$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: d2059fb8-3a4b-51d9-afc2-e1f0b3cbc0c6
+
+	measure 'Margem Bruta %' = DIVIDE([Margem Bruta USD], [Receita USD])
+		formatString: #,0.0 %
+		displayFolder: 04 Margem
+		lineageTag: b35bba2d-d933-6f32-99fb-dd01edcc84dd
+
+	measure 'Margem por Kg' = DIVIDE([Margem Bruta USD], [Peso Total Kg])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: a8c9aa94-1834-50fe-53fc-e7fc537e410b
+
+	measure 'Custo por Kg' = DIVIDE([Custo Total USD], [Peso Total Kg])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: c728ca50-0414-1c5d-9c78-d4c41b132320
+
+	measure 'Frete % Receita' = DIVIDE([Frete USD], [Receita USD])
+		formatString: #,0.0 %
+		displayFolder: 04 Margem
+		lineageTag: 825447b6-7ac1-4f67-3edc-c94e55230493
+
+	measure 'Impacto Desconto %' = DIVIDE([Descontos USD], [Receita Bruta USD])
+		formatString: #,0.0 %
+		displayFolder: 04 Margem
+		lineageTag: f3742512-c3d9-4c07-71aa-27fa207f9a6c
+
+	measure 'Margem LY' = CALCULATE([Margem Bruta USD], SAMEPERIODLASTYEAR(dCalendario[Data]))
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: 8e8b3854-9695-6605-02fb-a590b7775234
+
+	measure 'Margem YoY %' = DIVIDE([Margem Bruta USD] - [Margem LY], [Margem LY])
+		formatString: #,0.0 %
+		displayFolder: 04 Margem
+		lineageTag: 5eb9f254-ae76-91be-0c2c-ec6850a72472
+
+	measure 'Margem YTD' = TOTALYTD([Margem Bruta USD], dCalendario[Data])
+		formatString: "US$ "#,0.00
+		displayFolder: 04 Margem
+		lineageTag: f1a2dce2-c73f-8026-0b2e-f89bc9d89038
+
+	/// Clientes com ao menos um faturamento no contexto de filtro.
+	measure 'Clientes Ativos' = CALCULATE(DISTINCTCOUNT(fVendas[ClienteID]), fVendas[StatusPedido] = "Faturado")
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: 8be7dbd2-f92f-c301-a810-badd0d2f974e
+
+	measure 'Clientes 90D' =
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN CALCULATE(DISTINCTCOUNT(fVendas[ClienteID]),
+			    DATESINPERIOD(dCalendario[Data], _Fim, -90, DAY), ALL(dCalendario))
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: 1e72b1d9-295d-88bc-750c-b56153a48338
+
+	measure 'Clientes Base' = COUNTROWS(dCliente)
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: 9de98f1b-8e37-8f42-c42c-de21d4e63a7f
+
+	/// Clientes cuja primeira compra historica ocorreu dentro do periodo filtrado.
+	measure 'Novos Clientes' =
+			VAR _Ini = MIN(dCalendario[Data])
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN COUNTROWS(FILTER(VALUES(dCliente[ClienteID]),
+			    VAR _Prim = CALCULATE(MIN(fVendas[DataFaturamento]), ALL(dCalendario))
+			    RETURN NOT ISBLANK(_Prim) && _Prim >= _Ini && _Prim <= _Fim))
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: 869a54c2-b4b4-eba4-fa9d-1300c1a32949
+
+	/// Sem compras nos ultimos 365 dias em relacao ao fim do periodo.
+	measure 'Clientes Perdidos' =
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN COUNTROWS(FILTER(VALUES(dCliente[ClienteID]),
+			    VAR _Ult = CALCULATE(MAX(fVendas[DataFaturamento]), ALL(dCalendario), dCalendario[Data] <= _Fim)
+			    RETURN NOT ISBLANK(_Ult) && _Ult < _Fim - 365))
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: bad75d42-c624-ac22-56a8-87f2235b5f66
+
+	measure 'Clientes Em Risco' =
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN COUNTROWS(FILTER(VALUES(dCliente[ClienteID]),
+			    VAR _Ult = CALCULATE(MAX(fVendas[DataFaturamento]), ALL(dCalendario), dCalendario[Data] <= _Fim)
+			    RETURN NOT ISBLANK(_Ult) && _Ult < _Fim - 180 && _Ult >= _Fim - 365))
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: c08fa15b-b754-92c5-b6c0-19a4764c58c1
+
+	measure 'Clientes Inativos 90D' =
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN COUNTROWS(FILTER(VALUES(dCliente[ClienteID]),
+			    VAR _Ult = CALCULATE(MAX(fVendas[DataFaturamento]), ALL(dCalendario), dCalendario[Data] <= _Fim)
+			    RETURN NOT ISBLANK(_Ult) && _Ult < _Fim - 90))
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: 0733c4ac-d8a7-50bd-de19-ad2382472c9d
+
+	/// Comprou no periodo apos 180 dias ou mais sem compras.
+	measure 'Clientes Reativados' =
+			VAR _Ini = MIN(dCalendario[Data])
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN COUNTROWS(FILTER(VALUES(dCliente[ClienteID]),
+			    VAR _Comprou = CALCULATE([Pedidos]) > 0
+			    VAR _Ant = CALCULATE(MAX(fVendas[DataFaturamento]), ALL(dCalendario), dCalendario[Data] < _Ini)
+			    RETURN _Comprou && NOT ISBLANK(_Ant) && _Ant < _Ini - 180))
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: 05958ad7-17d4-639e-a696-123ea33f5100
+
+	measure 'Taxa de Churn %' = DIVIDE([Clientes Perdidos], [Clientes Perdidos] + [Clientes Ativos])
+		formatString: #,0.0 %
+		displayFolder: 05 Clientes
+		lineageTag: 270b9115-c32f-7bc6-5733-3bf1be3b37ee
+
+	measure 'Receita em Risco' =
+			VAR _Fim = MAX(dCalendario[Data])
+			RETURN SUMX(FILTER(VALUES(dCliente[ClienteID]),
+			    VAR _Ult = CALCULATE(MAX(fVendas[DataFaturamento]), ALL(dCalendario), dCalendario[Data] <= _Fim)
+			    RETURN NOT ISBLANK(_Ult) && _Ult < _Fim - 180),
+			    CALCULATE([Receita Rolling 12M]))
+		formatString: "US$ "#,0.00
+		displayFolder: 05 Clientes
+		lineageTag: 82c6958d-021a-0e7c-0885-d1266d1a9511
+
+	measure 'Receita por Cliente' = DIVIDE([Receita USD], [Clientes Ativos])
+		formatString: "US$ "#,0.00
+		displayFolder: 05 Clientes
+		lineageTag: 1c7be654-be28-7121-190c-fe972ff93eb0
+
+	measure 'Frequencia Media' = DIVIDE([Pedidos], [Clientes Ativos])
+		formatString: #,0.0
+		displayFolder: 05 Clientes
+		lineageTag: 87541eda-5ff0-8a3b-c127-1a5ba3876301
+
+	measure 'Recencia Dias' = DATEDIFF(CALCULATE(MAX(fVendas[DataFaturamento])), MAX(dCalendario[Data]), DAY)
+		formatString: #,0
+		displayFolder: 05 Clientes
+		lineageTag: ae017640-a641-ee5a-a873-6183a54f5534
+
+	measure 'Recencia Media Dias' = AVERAGEX(VALUES(dCliente[ClienteID]), [Recencia Dias])
+		formatString: #,0.0
+		displayFolder: 05 Clientes
+		lineageTag: f6824f34-6037-db94-9b07-d5de9dcd8e16
+
+	measure 'Data Primeira Compra' = CALCULATE(MIN(fVendas[DataFaturamento]), ALL(dCalendario))
+		formatString: yyyy-mm-dd
+		displayFolder: 05 Clientes
+		lineageTag: f7b21577-37dd-9766-eec5-c1b82a37c77a
+
+	measure 'Data Ultima Compra' = CALCULATE(MAX(fVendas[DataFaturamento]))
+		formatString: yyyy-mm-dd
+		displayFolder: 05 Clientes
+		lineageTag: 3057a655-f611-e3ec-a9df-1999aa7fce14
+
+	/// Proxy de valor vitalicio: receita 12M projetada em 3 anos ponderada pela margem.
+	measure 'LTV Estimado' = [Receita Rolling 12M] * 3 * [Margem Bruta %]
+		formatString: "US$ "#,0.00
+		displayFolder: 05 Clientes
+		lineageTag: fa52fa35-26af-ac35-ab7d-a54ae12ef8f8
+
+	measure 'Score Recencia' =
+			VAR _R = [Recencia Dias]
+			RETURN SWITCH(TRUE(), ISBLANK(_R), BLANK(), _R <= 45, 5, _R <= 90, 4, _R <= 180, 3, _R <= 365, 2, 1)
+		formatString: #,0
+		displayFolder: 06 RFV
+		lineageTag: 75f270a3-3a5b-9144-26de-5eb578109d92
+
+	measure 'Score Frequencia' =
+			VAR _F = [Pedidos]
+			RETURN SWITCH(TRUE(), _F = 0, BLANK(), _F >= 40, 5, _F >= 20, 4, _F >= 10, 3, _F >= 4, 2, 1)
+		formatString: #,0
+		displayFolder: 06 RFV
+		lineageTag: 6c9b2100-e95a-81a7-026a-2fb74c6a5205
+
+	/// Classificacao RFV dinamica calculada no contexto do relatorio.
+	measure 'Score Valor' =
+			VAR _V = [Receita USD]
+			VAR _Rk = RANKX(ALLSELECTED(dCliente[ClienteID]), [Receita USD], , DESC)
+			VAR _N = COUNTROWS(ALLSELECTED(dCliente[ClienteID]))
+			VAR _P = DIVIDE(_Rk, _N)
+			RETURN IF(ISBLANK(_V), BLANK(), SWITCH(TRUE(), _P <= 0.1, 5, _P <= 0.3, 4, _P <= 0.6, 3, _P <= 0.85, 2, 1))
+		formatString: #,0
+		displayFolder: 06 RFV
+		lineageTag: 1b35edc1-c6c6-229f-204c-e59757c6bd11
+
+	measure 'Score RFV Total' = [Score Recencia] + [Score Frequencia] + [Score Valor]
+		formatString: #,0
+		displayFolder: 06 RFV
+		lineageTag: 4d9b7295-440b-5bff-4b69-f885b81d598d
+
+	measure 'Segmento RFV' =
+			VAR _R = [Score Recencia] VAR _F = [Score Frequencia] VAR _V = [Score Valor]
+			VAR _Prim = [Data Primeira Compra]
+			VAR _Novo = DATEDIFF(_Prim, MAX(dCalendario[Data]), DAY) <= 180
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(_R), "Sem historico",
+			    _R >= 4 && _F >= 4 && _V >= 4, "Campeoes",
+			    _R >= 3 && _F >= 3 && _V >= 3, "Leais",
+			    _Novo && _R >= 4, "Novos",
+			    _R >= 4 && _F <= 2, "Potenciais",
+			    _R = 3 && _F >= 3, "Precisam de Atencao",
+			    _R = 2 && _V >= 3, "Em Risco",
+			    _R = 2, "Hibernando",
+			    "Perdidos")
+		displayFolder: 06 RFV
+		lineageTag: 0ee99d87-c7d6-5a0f-61d6-be81a53c8266
+
+	measure 'Ranking Cliente' = RANKX(ALLSELECTED(dCliente[RazaoSocial]), [Receita USD], , DESC, DENSE)
+		formatString: #,0
+		displayFolder: 07 Pareto e ABC
+		lineageTag: ed0dd1d0-5f97-c22a-4de0-b022131981eb
+
+	measure 'Ranking Produto' = RANKX(ALLSELECTED(dProduto[Produto]), [Receita USD], , DESC, DENSE)
+		formatString: #,0
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 911a57f4-f959-2825-7c89-35db60461ca8
+
+	measure 'Ranking Pais' = RANKX(ALLSELECTED(dPais[Pais]), [Receita USD], , DESC, DENSE)
+		formatString: #,0
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 3245c25b-70aa-2129-01f1-4c9e4c6572d6
+
+	measure 'Receita Acumulada Cliente' =
+			VAR _R = [Ranking Cliente]
+			RETURN SUMX(FILTER(ALLSELECTED(dCliente[RazaoSocial]), [Ranking Cliente] <= _R), [Receita USD])
+		formatString: "US$ "#,0.00
+		displayFolder: 07 Pareto e ABC
+		lineageTag: abcc3fb9-6e80-fb2a-59e4-70c328480302
+
+	measure 'Receita Acumulada Cliente %' = DIVIDE([Receita Acumulada Cliente], CALCULATE([Receita USD], ALLSELECTED(dCliente[RazaoSocial])))
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: fd1cd8d4-fc96-962b-5822-7764485b8bff
+
+	measure 'Classe ABC Cliente' =
+			VAR _P = [Receita Acumulada Cliente %]
+			RETURN SWITCH(TRUE(), ISBLANK(_P), BLANK(), _P <= 0.8, "A", _P <= 0.95, "B", "C")
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 0fd9957b-4f24-6c6a-f2b3-f12dbe68d1f5
+
+	measure 'Receita Acumulada Produto %' =
+			VAR _R = [Ranking Produto]
+			VAR _Ac = SUMX(FILTER(ALLSELECTED(dProduto[Produto]), [Ranking Produto] <= _R), [Receita USD])
+			RETURN DIVIDE(_Ac, CALCULATE([Receita USD], ALLSELECTED(dProduto[Produto])))
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 4174268a-c752-80c3-a767-ca87ce0ab470
+
+	measure 'Classe ABC Produto' =
+			VAR _P = [Receita Acumulada Produto %]
+			RETURN SWITCH(TRUE(), ISBLANK(_P), BLANK(), _P <= 0.8, "A", _P <= 0.95, "B", "C")
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 819652df-20f9-5c9a-b0bc-8955bcec6655
+
+	measure 'Participacao Top 1' =
+			VAR _T = CALCULATE([Receita USD], ALLSELECTED(dCliente))
+			RETURN DIVIDE(MAXX(TOPN(1, ALLSELECTED(dCliente[ClienteID]), [Receita USD], DESC), [Receita USD]), _T)
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 24ca5ba6-3563-e7d8-59f5-d0ffa2173d6b
+
+	measure 'Participacao Top 5' =
+			VAR _T = CALCULATE([Receita USD], ALLSELECTED(dCliente))
+			RETURN DIVIDE(SUMX(TOPN(5, ALLSELECTED(dCliente[ClienteID]), [Receita USD], DESC), [Receita USD]), _T)
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: f34a32d9-2f8f-7ab0-1590-266103eb0bce
+
+	measure 'Participacao Top 10' =
+			VAR _T = CALCULATE([Receita USD], ALLSELECTED(dCliente))
+			RETURN DIVIDE(SUMX(TOPN(10, ALLSELECTED(dCliente[ClienteID]), [Receita USD], DESC), [Receita USD]), _T)
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: 61b1e8b6-4c18-f19d-6fda-99491669f0bb
+
+	measure 'Participacao Top 20' =
+			VAR _T = CALCULATE([Receita USD], ALLSELECTED(dCliente))
+			RETURN DIVIDE(SUMX(TOPN(20, ALLSELECTED(dCliente[ClienteID]), [Receita USD], DESC), [Receita USD]), _T)
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: f0c4b2b0-12d1-d1d6-b2d8-e6c1e9fa27ae
+
+	/// Participacao do maior cliente na carteira do vendedor selecionado.
+	measure 'Concentracao Carteira Vendedor' =
+			VAR _T = [Receita USD]
+			RETURN DIVIDE(MAXX(TOPN(1, VALUES(dCliente[ClienteID]), [Receita USD], DESC), [Receita USD]), _T)
+		formatString: #,0.0 %
+		displayFolder: 07 Pareto e ABC
+		lineageTag: eeb2bafc-fbe6-3552-42a1-9fa400378098
+
+	measure 'Potencial Anual USD' = SUM(dCliente[PotencialAnualEstimadoUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 08 Potencial
+		lineageTag: f8c40dd8-6b95-1a84-5d67-fceb1bea7d8e
+
+	measure 'Receita 12M' = [Receita Rolling 12M]
+		formatString: "US$ "#,0.00
+		displayFolder: 08 Potencial
+		lineageTag: 4443a161-6d8d-328f-0c53-921ff2d79a16
+
+	/// Receita dos ultimos 12 meses dividida pelo potencial anual estimado do cliente.
+	measure 'Share of Wallet' = DIVIDE([Receita 12M], [Potencial Anual USD])
+		formatString: #,0.0 %
+		displayFolder: 08 Potencial
+		lineageTag: 237c0b67-fc25-5515-f4c4-37955eeacadf
+
+	measure 'Potencial Nao Capturado' = MAX([Potencial Anual USD] - [Receita 12M], 0)
+		formatString: "US$ "#,0.00
+		displayFolder: 08 Potencial
+		lineageTag: 6738b98e-840a-1020-2c70-d91e6d513e6d
+
+	/// Prioriza clientes com grande gap absoluto e baixa penetracao.
+	measure 'Score de Oportunidade' =
+			VAR _SoW = [Share of Wallet]
+			VAR _Gap = [Potencial Nao Capturado]
+			RETURN IF(ISBLANK(_SoW), BLANK(), _Gap * (1 - _SoW))
+		formatString: "US$ "#,0.00
+		displayFolder: 08 Potencial
+		lineageTag: a1e76971-7ebd-5330-49ac-a87fbf4e6237
+
+	measure 'Categorias Compradas' = CALCULATE(DISTINCTCOUNT(dProduto[Categoria]), fVendas)
+		formatString: #,0
+		displayFolder: 08 Potencial
+		lineageTag: d33528cb-fa9b-eb21-d975-4f1cd2b4a514
+
+	measure 'Categorias Disponiveis' = CALCULATE(DISTINCTCOUNT(dProduto[Categoria]), ALL(dProduto))
+		formatString: #,0
+		displayFolder: 08 Potencial
+		lineageTag: 5e51930a-41b3-de0c-9c54-5eaed75ccf11
+
+	measure 'Penetracao Categorias %' = DIVIDE([Categorias Compradas], [Categorias Disponiveis])
+		formatString: #,0.0 %
+		displayFolder: 08 Potencial
+		lineageTag: 06ac4b0e-50b3-d834-f988-ed8ffd63ed82
+
+	measure 'White Space Categorias' = [Categorias Disponiveis] - [Categorias Compradas]
+		formatString: #,0
+		displayFolder: 08 Potencial
+		lineageTag: c9e2b6f2-4131-5174-b334-e10c7cf1ebc8
+
+	measure 'Meta Receita USD' = SUM(fMetas[MetaReceitaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 09 Metas
+		lineageTag: de4ea233-15a5-0c8a-7c85-5db2e53771a9
+
+	measure 'Meta Volume Kg' = SUM(fMetas[MetaVolumeKg])
+		formatString: #,0.0
+		displayFolder: 09 Metas
+		lineageTag: 0304de43-2d13-4e07-2d98-5a3083f006aa
+
+	measure 'Meta Margem USD' = SUM(fMetas[MetaMargemUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 09 Metas
+		lineageTag: ec29d3c1-3fed-eda2-f219-87838922ea39
+
+	measure 'Meta Novos Clientes' = SUM(fMetas[MetaNovosClientes])
+		formatString: #,0
+		displayFolder: 09 Metas
+		lineageTag: 3527ab66-5cfb-79e1-7e86-ae9d50df3510
+
+	measure 'Meta Pedidos' = SUM(fMetas[MetaPedidos])
+		formatString: #,0
+		displayFolder: 09 Metas
+		lineageTag: 2ad181fa-beb5-7b6d-7f39-2c6fe85f79ec
+
+	measure 'Atingimento %' = DIVIDE([Receita USD], [Meta Receita USD])
+		formatString: #,0.0 %
+		displayFolder: 09 Metas
+		lineageTag: d0b402f9-b2a1-617d-ac9e-594975fc022a
+
+	measure 'Gap Meta USD' = [Receita USD] - [Meta Receita USD]
+		formatString: "US$ "#,0.00
+		displayFolder: 09 Metas
+		lineageTag: 37ec8f17-a272-fdb1-4b36-82f6ffeb863c
+
+	measure 'Atingimento Volume %' = DIVIDE([Peso Total Kg], [Meta Volume Kg])
+		formatString: #,0.0 %
+		displayFolder: 09 Metas
+		lineageTag: 2f965f05-bc7d-a707-b31a-365f1d892c59
+
+	measure 'Atingimento Margem %' = DIVIDE([Margem Bruta USD], [Meta Margem USD])
+		formatString: #,0.0 %
+		displayFolder: 09 Metas
+		lineageTag: b466e665-0d33-113e-0672-29a72d6b0e84
+
+	measure 'Atingimento Novos Clientes %' = DIVIDE([Novos Clientes], [Meta Novos Clientes])
+		formatString: #,0.0 %
+		displayFolder: 09 Metas
+		lineageTag: 226adbd9-ed45-22ec-64cc-005a11bdf4ff
+
+	measure 'Status Meta' =
+			VAR _A = [Atingimento %]
+			RETURN SWITCH(TRUE(), ISBLANK(_A), BLANK(), _A >= 1.2, "Superado", _A >= 1, "Atingido",
+			    _A >= 0.9, "Proximo", _A >= 0.8, "Abaixo", "Muito abaixo")
+		displayFolder: 09 Metas
+		lineageTag: 4b584318-1ada-e041-63a3-52d1e4cf345f
+
+	measure 'Receita Orcada USD' = SUM(fOrcamento[ReceitaOrcadaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: bdafc6bd-e716-bc0c-6be1-374bdbaf06d1
+
+	measure 'Margem Orcada USD' = SUM(fOrcamento[MargemOrcadaUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: 05496314-aba7-4855-37f3-52a9ef7f9832
+
+	measure 'Volume Orcado Kg' = SUM(fOrcamento[VolumeOrcadoKg])
+		formatString: #,0.0
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: ab663fd0-209a-f0cb-7ae4-86e6e0f97a87
+
+	/// Considera apenas a revisao de forecast mais recente.
+	measure 'Receita Forecast USD' =
+			VAR _UltRev = CALCULATE(MAX(fForecast[DataForecast]), ALLSELECTED(fForecast))
+			RETURN CALCULATE(SUM(fForecast[ReceitaForecastUSD]), fForecast[DataForecast] = _UltRev)
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: cf05e2c8-5e3f-44d2-02aa-19484dca5203
+
+	measure 'Margem Forecast USD' =
+			VAR _UltRev = CALCULATE(MAX(fForecast[DataForecast]), ALLSELECTED(fForecast))
+			RETURN CALCULATE(SUM(fForecast[MargemForecastUSD]), fForecast[DataForecast] = _UltRev)
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: 3898336c-1a1e-bf94-a3b4-160b54493def
+
+	measure 'Actual vs Budget USD' = [Receita USD] - [Receita Orcada USD]
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: e3dbf187-a9e9-0c9a-1e98-f1dd01fa5ec0
+
+	measure 'Actual vs Budget %' = DIVIDE([Receita USD], [Receita Orcada USD])
+		formatString: #,0.0 %
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: 0b3e82ed-1849-2997-e231-1d0ac5f21863
+
+	measure 'Forecast x Meta' = [Receita Forecast USD] - [Meta Receita USD]
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: fb4427bc-e4e8-f324-7b71-af751e138eba
+
+	measure 'Forecast x Orcado' = [Receita Forecast USD] - [Receita Orcada USD]
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: 7c14d75d-44db-e01e-cc87-9613595e4f16
+
+	measure 'Forecast Gap' = [Receita Forecast USD] - [Receita USD]
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: 014c8319-c8a8-4b95-3148-f8e3eb81f0ce
+
+	/// Peso historico do mes no total do periodo — base do orcamento adaptativo.
+	measure 'Sazonalidade Historica %' =
+			VAR _Mes = SELECTEDVALUE(dCalendario[NumeroMes])
+			VAR _RecMes = CALCULATE([Receita USD], ALL(dCalendario), dCalendario[NumeroMes] = _Mes)
+			VAR _RecTot = CALCULATE([Receita USD], ALL(dCalendario))
+			RETURN DIVIDE(_RecMes, _RecTot)
+		formatString: #,0.0 %
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: a962f506-3734-22b8-62a0-0c5b1fdaf95f
+
+	/// Projecao linear de fechamento do ano com base no realizado acumulado.
+	measure 'Projecao Fechamento Ano' =
+			VAR _Ano = MAX(dCalendario[Ano])
+			VAR _Realizado = CALCULATE([Receita USD], ALL(dCalendario), dCalendario[Ano] = _Ano,
+			        dCalendario[Data] <= MAX(fVendas[DataFaturamento]))
+			VAR _PesoRealizado = CALCULATE([Sazonalidade Historica %], ALL(dCalendario))
+			VAR _MesesDecorridos = CALCULATE(MAX(dCalendario[NumeroMes]), ALL(dCalendario),
+			        dCalendario[Data] <= MAX(fVendas[DataFaturamento]), dCalendario[Ano] = _Ano)
+			RETURN DIVIDE(_Realizado, DIVIDE(_MesesDecorridos, 12))
+		formatString: "US$ "#,0.00
+		displayFolder: 10 Forecast e Orcamento
+		lineageTag: 966c1625-d81e-efc2-698b-15db52d4de5e
+
+	measure Embarques = DISTINCTCOUNT(fEmbarques[EmbarqueID])
+		formatString: #,0
+		displayFolder: 11 Logistica
+		lineageTag: 4b2a082e-f2ae-e926-a06f-a5440e61a896
+
+	measure 'Entregas Realizadas' = CALCULATE([Embarques], NOT(ISBLANK(fEmbarques[DiasAtraso])))
+		formatString: #,0
+		displayFolder: 11 Logistica
+		lineageTag: 95d3bf6a-96fa-2914-dcc4-975585742422
+
+	measure 'Embarques Atrasados' = CALCULATE([Embarques], fEmbarques[DiasAtraso] > 0)
+		formatString: #,0
+		displayFolder: 11 Logistica
+		lineageTag: da04d448-f493-3ecb-3ace-d748442bc21b
+
+	measure '% Embarques Atrasados' = DIVIDE([Embarques Atrasados], [Entregas Realizadas])
+		formatString: #,0.0 %
+		displayFolder: 11 Logistica
+		lineageTag: 26d5f992-611a-d6b8-d0bc-1545d50b67c7
+
+	measure 'On Time %' = DIVIDE([Entregas Realizadas] - [Embarques Atrasados], [Entregas Realizadas])
+		formatString: #,0.0 %
+		displayFolder: 11 Logistica
+		lineageTag: fbacbe1f-3c91-b4ae-96bd-ccbdb8b06d52
+
+	measure 'In Full %' = DIVIDE(CALCULATE([Embarques], fEmbarques[StatusEmbarque] <> "Aguardando embarque"), [Embarques])
+		formatString: #,0.0 %
+		displayFolder: 11 Logistica
+		lineageTag: a233ce71-914d-8a90-0c5b-d59c9ee46594
+
+	/// On Time In Full: proporcao de entregas no prazo e completas.
+	measure 'OTIF %' = [On Time %] * [In Full %]
+		formatString: #,0.0 %
+		displayFolder: 11 Logistica
+		lineageTag: 899fa9ae-6224-a05b-45e0-ee8d9c778fb6
+
+	measure 'Lead Time Previsto' = AVERAGE(fEmbarques[LeadTimePrevisto])
+		formatString: #,0.0
+		displayFolder: 11 Logistica
+		lineageTag: 8a7e1d3d-f081-2d80-0e6e-f5cd1d699834
+
+	measure 'Lead Time Real' = AVERAGE(fEmbarques[LeadTimeReal])
+		formatString: #,0.0
+		displayFolder: 11 Logistica
+		lineageTag: 9e0ca594-8885-759f-0159-0bf0b3820b2d
+
+	measure 'Desvio Lead Time' = [Lead Time Real] - [Lead Time Previsto]
+		formatString: #,0.0
+		displayFolder: 11 Logistica
+		lineageTag: 6341e2c0-2799-65b2-dd35-ba3cd6520b9f
+
+	measure 'Dias de Atraso Medio' = CALCULATE(AVERAGE(fEmbarques[DiasAtraso]), fEmbarques[DiasAtraso] > 0)
+		formatString: #,0.0
+		displayFolder: 11 Logistica
+		lineageTag: f8689d4a-f43a-e2af-18cf-748cc467d3d6
+
+	measure 'Peso Embarcado Kg' = SUM(fEmbarques[PesoKg])
+		formatString: #,0.0
+		displayFolder: 11 Logistica
+		lineageTag: e2b68351-6858-a731-8dcb-58d9250cfc80
+
+	measure 'Frete Embarque USD' = SUM(fEmbarques[FreteUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 11 Logistica
+		lineageTag: ef3f9fb4-6661-207f-cf75-12ab781b611d
+
+	measure 'Frete por Kg' = DIVIDE([Frete Embarque USD], [Peso Embarcado Kg])
+		formatString: "US$ "#,0.00
+		displayFolder: 11 Logistica
+		lineageTag: b806161b-a6e3-39e7-c24a-260b688f3b7a
+
+	measure 'Contas a Receber' = SUM(fRecebimentos[ValorUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 12 Financeiro
+		lineageTag: e6641b9f-44a1-3bfd-52c4-42256ab0a2f6
+
+	measure 'Recebido USD' = SUM(fRecebimentos[ValorRecebidoUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 12 Financeiro
+		lineageTag: 80da33de-a7f5-476d-3d44-f2c909825f2d
+
+	measure 'Saldo em Aberto' = SUM(fRecebimentos[SaldoUSD])
+		formatString: "US$ "#,0.00
+		displayFolder: 12 Financeiro
+		lineageTag: 93e93c8f-6c31-b57e-bd3d-9b71031f4fee
+
+	measure 'Saldo Vencido' = CALCULATE([Saldo em Aberto], fRecebimentos[Status] IN {"Vencido", "Parcial"})
+		formatString: "US$ "#,0.00
+		displayFolder: 12 Financeiro
+		lineageTag: b0373803-bd8e-d645-32cf-3b0987e2c1f3
+
+	measure 'Inadimplencia %' = DIVIDE([Saldo Vencido], [Contas a Receber])
+		formatString: #,0.0 %
+		displayFolder: 12 Financeiro
+		lineageTag: 38f109c5-bd9f-9c0a-af92-46a21a54224a
+
+	measure 'Dias Medios de Atraso' = CALCULATE(AVERAGE(fRecebimentos[DiasAtraso]), fRecebimentos[DiasAtraso] > 0)
+		formatString: #,0.0
+		displayFolder: 12 Financeiro
+		lineageTag: e24aa959-d5fc-e659-4530-b5896537c8a4
+
+	/// PMR em dias entre faturamento e pagamento efetivo.
+	measure 'Prazo Medio Recebimento' =
+			AVERAGEX(FILTER(fRecebimentos, NOT ISBLANK(fRecebimentos[DataPagamento])),
+			    DATEDIFF(fRecebimentos[DataFaturamento], fRecebimentos[DataPagamento], DAY))
+		formatString: #,0.0
+		displayFolder: 12 Financeiro
+		lineageTag: 9654007a-c129-68f4-a982-0c0b663bae23
+
+	measure 'Faixa Aging' =
+			VAR _Hoje = MAX(dCalendario[Data])
+			VAR _D = AVERAGEX(fRecebimentos, DATEDIFF(fRecebimentos[DataVencimento], _Hoje, DAY))
+			RETURN SWITCH(TRUE(), _D < 0, "A vencer", _D <= 30, "1-30 dias", _D <= 60, "31-60 dias",
+			    _D <= 90, "61-90 dias", _D <= 180, "91-180 dias", "+180 dias")
+		displayFolder: 12 Financeiro
+		lineageTag: 1ea6b9fc-d5be-afaa-00b6-bad5fe462845
+
+	measure 'Saldo Vencido +90' =
+			VAR _Hoje = MAX(dCalendario[Data])
+			RETURN CALCULATE([Saldo em Aberto],
+			    FILTER(fRecebimentos, DATEDIFF(fRecebimentos[DataVencimento], _Hoje, DAY) > 90))
+		formatString: "US$ "#,0.00
+		displayFolder: 12 Financeiro
+		lineageTag: fc02bdd7-8482-db3d-6149-a6fd1498fc02
+
+	measure 'Taxa Media USD BRL' = CALCULATE(AVERAGE(fCambio[TaxaBRL]), fCambio[Moeda] = "USD")
+		formatString: #,0.0000
+		displayFolder: 13 Cambio
+		lineageTag: 3b2fe259-c7c5-1b63-deb4-18fdb351d085
+
+	measure 'Taxa Media Ponderada' = DIVIDE([Receita BRL], [Receita USD])
+		formatString: #,0.0000
+		displayFolder: 13 Cambio
+		lineageTag: ebb215f2-3320-363e-71c0-4478d07cba87
+
+	measure 'Taxa Media LY' = CALCULATE([Taxa Media Ponderada], SAMEPERIODLASTYEAR(dCalendario[Data]))
+		formatString: #,0.0000
+		displayFolder: 13 Cambio
+		lineageTag: 256372ff-950a-d2cd-c691-199b4ee5d756
+
+	/// Parcela da variacao da receita em BRL explicada apenas pela variacao cambial.
+	measure 'Efeito Cambio BRL' = [Receita USD] * ([Taxa Media Ponderada] - [Taxa Media LY])
+		formatString: "R$ "#,0.00
+		displayFolder: 13 Cambio
+		lineageTag: c1266da2-adbf-54ca-3d8c-57122d515560
+
+	measure 'Crescimento Operacional BRL' =
+			VAR _LY_BRL = CALCULATE([Receita BRL], SAMEPERIODLASTYEAR(dCalendario[Data]))
+			RETURN [Receita BRL] - _LY_BRL - [Efeito Cambio BRL]
+		formatString: "R$ "#,0.00
+		displayFolder: 13 Cambio
+		lineageTag: 5ccffc0b-2089-122d-9370-32690c82c30e
+
+	measure 'Variacao Cambial %' = DIVIDE([Taxa Media Ponderada] - [Taxa Media LY], [Taxa Media LY])
+		formatString: #,0.0 %
+		displayFolder: 13 Cambio
+		lineageTag: a1f079d6-1153-d1a6-563d-9eb11d771e40
+
+	/// Quanto o elemento explica da variacao total de receita do periodo.
+	measure 'Contribuicao para Crescimento' = DIVIDE([Receita YoY], CALCULATE([Receita YoY], ALLSELECTED()))
+		formatString: #,0.0 %
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: 8166ece1-847a-3984-78e3-65e0f33bd63b
+
+	measure 'Maior Crescimento Mercado' =
+			VAR _T = TOPN(1, ALLSELECTED(dPais[Pais]), [Receita YoY], DESC)
+			RETURN CONCATENATEX(_T, dPais[Pais], ", ")
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: eb1860b2-dc20-ee4c-a4ed-e2e6453591e2
+
+	measure 'Maior Queda Mercado' =
+			VAR _T = TOPN(1, ALLSELECTED(dPais[Pais]), [Receita YoY], ASC)
+			RETURN CONCATENATEX(_T, dPais[Pais], ", ")
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: bd3db621-64d5-32b4-9c7d-29d37d37c92f
+
+	/// Texto dinamico com sustentacao matematica para a area de insights.
+	measure 'Cliente Maior Queda' =
+			VAR _T = TOPN(1, ALLSELECTED(dCliente[RazaoSocial]), [Receita YoY], ASC)
+			RETURN CONCATENATEX(_T, dCliente[RazaoSocial], ", ")
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: 954d9073-1f9f-9613-c827-95a1d90206b5
+
+	measure 'Texto Insight Crescimento' =
+			VAR _Total = CALCULATE([Receita YoY], ALLSELECTED(dPais))
+			VAR _TopPais = TOPN(1, ALLSELECTED(dPais[Pais]), [Receita YoY], DESC)
+			VAR _Nome = CONCATENATEX(_TopPais, dPais[Pais], ", ")
+			VAR _Val = MAXX(_TopPais, [Receita YoY])
+			VAR _Part = DIVIDE(_Val, _Total)
+			RETURN IF(ISBLANK(_Total) || _Total = 0, "Sem base comparativa no periodo selecionado.",
+			    _Nome & " respondeu por " & FORMAT(_Part, "0.0%") & " da variacao de receita do periodo ("
+			    & FORMAT(_Val, "$#,0,,.0M") & ").")
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: 0b5dafda-f6c0-8b13-c643-64b614055858
+
+	measure 'Texto Insight Margem' =
+			VAR _pp = [Margem YoY p.p.]
+			RETURN IF(ISBLANK(_pp), "Sem comparativo YoY.",
+			    "Margem bruta " & IF(_pp >= 0, "avancou ", "recuou ") & FORMAT(ABS(_pp), "0.0")
+			    & " p.p. YoY, hoje em " & FORMAT([Margem Bruta %], "0.0%") & ".")
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: 9beb50e3-181c-674d-a3b9-63c0552a1aea
+
+	measure 'Alerta Rota Critica' =
+			VAR _T = TOPN(1, ALLSELECTED(dPais[Pais]), [% Embarques Atrasados], DESC)
+			VAR _Nome = CONCATENATEX(_T, dPais[Pais], ", ")
+			VAR _V = MAXX(_T, [% Embarques Atrasados])
+			RETURN IF(ISBLANK(_V), BLANK(), _Nome & ": " & FORMAT(_V, "0.0%") & " de entregas atrasadas")
+		displayFolder: 14 Inteligencia Comercial
+		lineageTag: 655fbb56-28a1-253e-4580-e419fdf47133
+
+	measure 'Cor Semaforo Meta' =
+			VAR _A = [Atingimento %]
+			RETURN SWITCH(TRUE(), ISBLANK(_A), "#8C96A5", _A >= 1, "#1F8A70", _A >= 0.9, "#D9A441", "#C0453B")
+		displayFolder: 15 Formatacao
+		lineageTag: d42b2a0f-5de6-0f54-7a65-d8dde50e5c6d
+
+	measure 'Cor Variacao' = IF([Receita YoY] >= 0, "#1F8A70", "#C0453B")
+		displayFolder: 15 Formatacao
+		lineageTag: 2005db7e-b251-d77b-3515-6a72fdd81a28
+
+	measure 'Icone Tendencia' = IF([Receita YoY] >= 0, "▲", "▼")
+		displayFolder: 15 Formatacao
+		lineageTag: 9df5abbc-dd69-8bed-cfd1-214682f0ee08
+
+	measure 'KPI Receita Contexto' =
+			IF(ISBLANK([Receita LY]), "sem comparativo",
+			    [Icone Tendencia] & " " & FORMAT([Receita YoY %], "0.0%") & " YoY  ("
+			    & FORMAT([Receita YoY], "$#,0,,.1M") & ")")
+		displayFolder: 15 Formatacao
+		lineageTag: f6cec6ce-9ed4-71ba-bf32-1ed272572fd0
+
+	measure 'Titulo Periodo' =
+			VAR _Ini = MIN(dCalendario[Data]) VAR _Fim = MAX(dCalendario[Data])
+			RETURN IF(YEAR(_Ini) = YEAR(_Fim) && MONTH(_Ini) = MONTH(_Fim),
+			    FORMAT(_Ini, "mmm/yyyy"),
+			    FORMAT(_Ini, "mmm/yy") & " - " & FORMAT(_Fim, "mmm/yy"))
+		displayFolder: 16 Titulos Dinamicos
+		lineageTag: 52e85429-ef5e-98a3-76ed-53287351c3c0
+
+	measure 'Titulo Filtros' =
+			VAR _Cont = IF(ISFILTERED(dPais[Continente]),
+			        CONCATENATEX(VALUES(dPais[Continente]), dPais[Continente], ", "), "Global")
+			RETURN _Cont & " — " & [Titulo Periodo]
+		displayFolder: 16 Titulos Dinamicos
+		lineageTag: 6e0a86f0-4093-7e09-913b-176cf26306d6
+
+	measure 'Titulo Receita por Pais' = "Receita por Pais — " & [Titulo Filtros]
+		displayFolder: 16 Titulos Dinamicos
+		lineageTag: abd8b332-bebc-f72e-dcf8-2f36dce9f624
+
+	measure 'Titulo Performance Comercial' = "Performance Comercial — " & [Titulo Filtros]
+		displayFolder: 16 Titulos Dinamicos
+		lineageTag: c649fb8a-e844-b574-c85e-e1a99c018b4f
+
+	measure 'Titulo Rentabilidade' = "Ponte de Rentabilidade — " & [Titulo Periodo]
+		displayFolder: 16 Titulos Dinamicos
+		lineageTag: 2462fbfa-ac4c-0629-26e5-5db35b607c00
+
+	/// Painel de KPIs da pagina 01 Executive Overview.
+	measure 'HTML Painel Executivo' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s1", CALCULATE ( [Margem Bruta %] ),
+			        "@s3", CALCULATE ( [Toneladas] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn3 = MINX ( _serie, [@s3] )
+			VAR _mx3 = MAXX ( _serie, [@s3] )
+			VAR _pt3 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s3] - _mn3, _mx3 - _mn3, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _d1 = [Margem YoY p.p.] * 100
+			VAR _c1 = IF ( _d1 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c2 = IF ( [Atingimento %] >= 1, "#1F8A70", IF ( [Atingimento %] >= 0.9, "#D9A441", "#C0453B" ) )
+			VAR _d3 = [Volume YoY %]
+			VAR _c3 = IF ( _d3 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c7 = IF ( [OTIF %] >= 0.9, "#1F8A70", IF ( [OTIF %] >= 0.8, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita USD</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Margem Bruta</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c1 & "'" & ">" & IF ( _d1 >= 0, "▲ ", "▼ " ) & FORMAT ( _d1, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Atingimento da Meta</div>"
+			            & "<div class='vl'" & " style='color:" & _c2 & "'" & ">" & FORMAT ( [Atingimento %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>meta " & IF ( ABS ( [Meta Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Meta Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Meta Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [Atingimento %], 0 ), 1.5 ) / 1.5 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c2 & "'></i><u style='left:66.7%'></u></div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Volume Exportado</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Toneladas] / 1000, "#,0.0", "pt-BR" ) & " Mil t" & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c3 & "'" & ">" & IF ( _d3 >= 0, "▲ ", "▼ " ) & FORMAT ( _d3, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt3 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Receita em BRL</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita BRL] ) >= 1E9, "R$ " & FORMAT ( [Receita BRL] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "R$ " & FORMAT ( [Receita BRL] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>câmbio médio R$ " & FORMAT([Taxa Media Ponderada],"#,0.00","pt-BR") & "</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Clientes Ativos</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Clientes Ativos], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & FORMAT([Novos Clientes],"#,0","pt-BR") & " novos · " & FORMAT([Clientes Perdidos],"#,0","pt-BR") & " perdidos</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Pedidos Faturados</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Pedidos] / 1000, "#,0.0", "pt-BR" ) & " Mil" & "</div>"
+			            & "<div class='dt'" & ">" & "<em>ticket " & "US$ " & FORMAT ( [Ticket Medio USD], "#,0", "pt-BR" ) & "</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>OTIF Logístico</div>"
+			            & "<div class='vl'" & " style='color:" & _c7 & "'" & ">" & FORMAT ( [OTIF %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & FORMAT([% Embarques Atrasados],"0.0%","pt-BR") & " com atraso</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [OTIF %], 0 ), 1 ) / 1 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c7 & "'></i><u style='left:90.0%'></u></div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 15113f04-faa3-3ced-c05f-5722fb70a5b3
+
+	/// Painel de KPIs da pagina 02 Sales Performance.
+	measure 'HTML Painel Vendas' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s3", CALCULATE ( [Ticket Medio USD] ),
+			        "@s4", CALCULATE ( [Pedidos] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn3 = MINX ( _serie, [@s3] )
+			VAR _mx3 = MAXX ( _serie, [@s3] )
+			VAR _pt3 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s3] - _mn3, _mx3 - _mn3, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn4 = MINX ( _serie, [@s4] )
+			VAR _mx4 = MAXX ( _serie, [@s4] )
+			VAR _pt4 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s4] - _mn4, _mx4 - _mn4, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c2 = IF ( [Gap Meta USD] >= 0, "#1F8A70", "#C0453B" )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(5,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Meta</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Meta Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Meta Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Meta Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & [Status Meta] & "</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Gap versus Meta</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Gap Meta USD] ) >= 1E9, "US$ " & FORMAT ( [Gap Meta USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Gap Meta USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c2 & "'" & ">" & "<em>realizado − meta</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Ticket Médio</div>"
+			            & "<div class='vl'" & ">" & "US$ " & FORMAT ( [Ticket Medio USD], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>por pedido</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt3 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Pedidos</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Pedidos] / 1000, "#,0.0", "pt-BR" ) & " Mil" & "</div>"
+			            & "<div class='dt'" & ">" & "<em>no período</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt4 & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 9e58bc63-4cc0-9060-643a-e91942710dde
+
+	/// Painel de KPIs da pagina 03 Customers.
+	measure 'HTML Painel Clientes' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Clientes Ativos] ),
+			        "@s1", CALCULATE ( [Novos Clientes] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _c4 = IF ( [Taxa de Churn %] <= 0.05, "#1F8A70", IF ( [Taxa de Churn %] <= 0.1, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(6,1fr)"">"
+			        & "<div class='t'><div class='lb'>Clientes Ativos</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Clientes Ativos], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>com faturamento</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Novos</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Novos Clientes], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>1ª compra no período</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Reativados</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Clientes Reativados], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>após 180d parados</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Perdidos</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Clientes Perdidos], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>sem compra há 365d</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Churn</div>"
+			            & "<div class='vl'" & " style='color:" & _c4 & "'" & ">" & FORMAT ( [Taxa de Churn %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>perdidos / base</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Receita em Risco</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita em Risco] ) >= 1E9, "US$ " & FORMAT ( [Receita em Risco] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita em Risco] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>clientes 180d+ parados</em>" & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 3f03c91d-e551-a792-31bf-0563af8ba560
+
+	/// Painel de KPIs da pagina 04 Customer Potential.
+	measure 'HTML Painel Potencial' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita 12M] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _c2 = IF ( [Share of Wallet] >= 0.4, "#1F8A70", IF ( [Share of Wallet] >= 0.25, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita 12 Meses</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita 12M] ) >= 1E9, "US$ " & FORMAT ( [Receita 12M] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita 12M] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>últimos 12 meses</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Potencial Estimado</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Potencial Anual USD] ) >= 1E9, "US$ " & FORMAT ( [Potencial Anual USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Potencial Anual USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>estimativa da base</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Share of Wallet</div>"
+			            & "<div class='vl'" & " style='color:" & _c2 & "'" & ">" & FORMAT ( [Share of Wallet], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>receita / potencial</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [Share of Wallet], 0 ), 1 ) / 1 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c2 & "'></i><u style='left:40.0%'></u></div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Gap Não Capturado</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Potencial Nao Capturado] ) >= 1E9, "US$ " & FORMAT ( [Potencial Nao Capturado] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Potencial Nao Capturado] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>espaço para crescer</em>" & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: d6e4f81d-8684-aa92-b161-4c636345e060
+
+	/// Painel de KPIs da pagina 05 Products.
+	measure 'HTML Painel Produtos' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s1", CALCULATE ( [Margem Bruta %] ),
+			        "@s2", CALCULATE ( [Toneladas] ),
+			        "@s3", CALCULATE ( [Preco Medio por Kg] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn2 = MINX ( _serie, [@s2] )
+			VAR _mx2 = MAXX ( _serie, [@s2] )
+			VAR _pt2 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s2] - _mn2, _mx2 - _mn2, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn3 = MINX ( _serie, [@s3] )
+			VAR _mx3 = MAXX ( _serie, [@s3] )
+			VAR _pt3 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s3] - _mn3, _mx3 - _mn3, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _d1 = [Margem YoY p.p.] * 100
+			VAR _c1 = IF ( _d1 >= 0, "#1F8A70", "#C0453B" )
+			VAR _d2 = [Volume YoY %]
+			VAR _c2 = IF ( _d2 >= 0, "#1F8A70", "#C0453B" )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Margem</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c1 & "'" & ">" & IF ( _d1 >= 0, "▲ ", "▼ " ) & FORMAT ( _d1, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Volume</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Toneladas] / 1000, "#,0.0", "pt-BR" ) & " Mil t" & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c2 & "'" & ">" & IF ( _d2 >= 0, "▲ ", "▼ " ) & FORMAT ( _d2, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#8FA98F'>" & _pt2 & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Preço Médio/kg</div>"
+			            & "<div class='vl'" & ">" & "US$ " & FORMAT ( [Preco Medio por Kg], "#,0.00", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>receita bruta / kg</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt3 & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 206bd4ea-bfc5-23db-0e3f-2e78b9df8951
+
+	/// Painel de KPIs da pagina 06 Markets.
+	measure 'HTML Painel Mercados' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s1", CALCULATE ( [Toneladas] ),
+			        "@s3", CALCULATE ( [Margem Bruta %] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn3 = MINX ( _serie, [@s3] )
+			VAR _mx3 = MAXX ( _serie, [@s3] )
+			VAR _pt3 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s3] - _mn3, _mx3 - _mn3, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _d1 = [Volume YoY %]
+			VAR _c1 = IF ( _d1 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c2 = IF ( [Receita YoY %] >= 0, "#1F8A70", "#C0453B" )
+			VAR _d3 = [Margem YoY p.p.] * 100
+			VAR _c3 = IF ( _d3 >= 0, "#1F8A70", "#C0453B" )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita Exportada</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Volume</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Toneladas] / 1000, "#,0.0", "pt-BR" ) & " Mil t" & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c1 & "'" & ">" & IF ( _d1 >= 0, "▲ ", "▼ " ) & FORMAT ( _d1, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Crescimento YoY</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Receita YoY %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c2 & "'" & ">" & "<em>" & [Maior Crescimento Mercado] & " lidera</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Margem</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c3 & "'" & ">" & IF ( _d3 >= 0, "▲ ", "▼ " ) & FORMAT ( _d3, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt3 & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: a16aa2a8-ade6-a1c1-6cc1-dd6682e488a7
+
+	/// Painel de KPIs da pagina 07 Profitability.
+	measure 'HTML Painel Rentabilidade' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita Bruta USD] ),
+			        "@s3", CALCULATE ( [Margem Bruta USD] ),
+			        "@s4", CALCULATE ( [Margem Bruta %] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn3 = MINX ( _serie, [@s3] )
+			VAR _mx3 = MAXX ( _serie, [@s3] )
+			VAR _pt3 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s3] - _mn3, _mx3 - _mn3, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn4 = MINX ( _serie, [@s4] )
+			VAR _mx4 = MAXX ( _serie, [@s4] )
+			VAR _pt4 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s4] - _mn4, _mx4 - _mn4, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d3 = [Margem YoY %]
+			VAR _c3 = IF ( _d3 >= 0, "#1F8A70", "#C0453B" )
+			VAR _d4 = [Margem YoY p.p.] * 100
+			VAR _c4 = IF ( _d4 >= 0, "#1F8A70", "#C0453B" )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(5,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita Bruta</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita Bruta USD] ) >= 1E9, "US$ " & FORMAT ( [Receita Bruta USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita Bruta USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>antes de descontos</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Descontos</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Descontos USD] ) >= 1E9, "US$ " & FORMAT ( [Descontos USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Descontos USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & FORMAT([Desconto %],"0.0%","pt-BR") & " da bruta</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Custo Total</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Custo Total USD] ) >= 1E9, "US$ " & FORMAT ( [Custo Total USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Custo Total USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>produto + frete + seguro</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Margem Bruta</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Margem Bruta USD] ) >= 1E9, "US$ " & FORMAT ( [Margem Bruta USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Margem Bruta USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c3 & "'" & ">" & IF ( _d3 >= 0, "▲ ", "▼ " ) & FORMAT ( _d3, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt3 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Margem %</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c4 & "'" & ">" & IF ( _d4 >= 0, "▲ ", "▼ " ) & FORMAT ( _d4, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt4 & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: e198d8bc-fd85-c045-ece6-139a3b0b74cb
+
+	/// Painel de KPIs da pagina 08 Logistics.
+	measure 'HTML Painel Logistica' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s1", CALCULATE ( [Lead Time Real] ),
+			        "@s2", CALCULATE ( [% Embarques Atrasados] ),
+			        "@s4", CALCULATE ( [Frete por Kg] )
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn2 = MINX ( _serie, [@s2] )
+			VAR _mx2 = MAXX ( _serie, [@s2] )
+			VAR _pt2 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s2] - _mn2, _mx2 - _mn2, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn4 = MINX ( _serie, [@s4] )
+			VAR _mx4 = MAXX ( _serie, [@s4] )
+			VAR _pt4 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s4] - _mn4, _mx4 - _mn4, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _c0 = IF ( [OTIF %] >= 0.9, "#1F8A70", IF ( [OTIF %] >= 0.8, "#D9A441", "#C0453B" ) )
+			VAR _c2 = IF ( [% Embarques Atrasados] <= 0.1, "#1F8A70", IF ( [% Embarques Atrasados] <= 0.2, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(5,1fr)"">"
+			        & "<div class='t'><div class='lb'>OTIF</div>"
+			            & "<div class='vl'" & " style='color:" & _c0 & "'" & ">" & FORMAT ( [OTIF %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>on time e in full</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [OTIF %], 0 ), 1 ) / 1 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c0 & "'></i><u style='left:90.0%'></u></div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Lead Time Real</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Lead Time Real], "#,0.0", "pt-BR" ) & " d" & "</div>"
+			            & "<div class='dt'" & ">" & "<em>previsto " & FORMAT([Lead Time Previsto],"#,0.0","pt-BR") & "d</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Embarques Atrasados</div>"
+			            & "<div class='vl'" & " style='color:" & _c2 & "'" & ">" & FORMAT ( [% Embarques Atrasados], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>sobre entregas realizadas</em>" & "</div>"
+			            & "<div class='spk' style='color:#8FA98F'>" & _pt2 & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Atraso Médio</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Dias de Atraso Medio], "#,0.0", "pt-BR" ) & " d" & "</div>"
+			            & "<div class='dt'" & ">" & "<em>só embarques atrasados</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Frete por Kg</div>"
+			            & "<div class='vl'" & ">" & "US$ " & FORMAT ( [Frete por Kg], "#,0.00", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>frete / peso embarcado</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt4 & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 42988d67-5ab3-c714-72ac-0bbd5002c5b2
+
+	/// Painel de KPIs da pagina 09 Sales Team.
+	measure 'HTML Painel Equipe' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s2", CALCULATE ( [Novos Clientes] ),
+			        "@s3", CALCULATE ( [Margem Bruta %] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn2 = MINX ( _serie, [@s2] )
+			VAR _mx2 = MAXX ( _serie, [@s2] )
+			VAR _pt2 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s2] - _mn2, _mx2 - _mn2, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn3 = MINX ( _serie, [@s3] )
+			VAR _mx3 = MAXX ( _serie, [@s3] )
+			VAR _pt3 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s3] - _mn3, _mx3 - _mn3, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c1 = IF ( [Atingimento %] >= 1, "#1F8A70", IF ( [Atingimento %] >= 0.9, "#D9A441", "#C0453B" ) )
+			VAR _d3 = [Margem YoY p.p.] * 100
+			VAR _c3 = IF ( _d3 >= 0, "#1F8A70", "#C0453B" )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita da Equipe</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Atingimento Médio</div>"
+			            & "<div class='vl'" & " style='color:" & _c1 & "'" & ">" & FORMAT ( [Atingimento %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & [Status Meta] & "</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [Atingimento %], 0 ), 1.5 ) / 1.5 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c1 & "'></i><u style='left:66.7%'></u></div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Novos Clientes</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Novos Clientes], "#,0", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>1ª compra no período</em>" & "</div>"
+			            & "<div class='spk' style='color:#8FA98F'>" & _pt2 & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Margem</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c3 & "'" & ">" & IF ( _d3 >= 0, "▲ ", "▼ " ) & FORMAT ( _d3, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt3 & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 4c4895a9-4237-672e-8e9b-22cf77c3145c
+
+	/// Painel de KPIs da pagina 10 Finance.
+	measure 'HTML Painel Financeiro' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s1", CALCULATE ( [Recebido USD] )
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _c4 = IF ( [Inadimplencia %] <= 0.02, "#1F8A70", IF ( [Inadimplencia %] <= 0.04, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(5,1fr)"">"
+			        & "<div class='t'><div class='lb'>Contas a Receber</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Contas a Receber] ) >= 1E9, "US$ " & FORMAT ( [Contas a Receber] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Contas a Receber] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>carteira total</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Recebido</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Recebido USD] ) >= 1E9, "US$ " & FORMAT ( [Recebido USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Recebido USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>já liquidado</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Saldo em Aberto</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Saldo em Aberto] ) >= 1E9, "US$ " & FORMAT ( [Saldo em Aberto] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Saldo em Aberto] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>a vencer + vencido</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Saldo Vencido</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Saldo Vencido] ) >= 1E9, "US$ " & FORMAT ( [Saldo Vencido] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Saldo Vencido] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>vencido + parcial</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Inadimplência</div>"
+			            & "<div class='vl'" & " style='color:" & _c4 & "'" & ">" & FORMAT ( [Inadimplencia %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>vencido / carteira</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [Inadimplencia %], 0 ), 0.05 ) / 0.05 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c4 & "'></i><u style='left:40.0%'></u></div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 7e8eadf4-da78-991d-8d6e-3792d9c85563
+
+	/// Painel de KPIs da pagina 11 Forecast e Budget.
+	measure 'HTML Painel Forecast' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c3 = IF ( [Forecast Gap] >= 0, "#1F8A70", "#C0453B" )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(5,1fr)"">"
+			        & "<div class='t'><div class='lb'>Realizado</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Orçado</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita Orcada USD] ) >= 1E9, "US$ " & FORMAT ( [Receita Orcada USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita Orcada USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & FORMAT([Actual vs Budget %],"0.0%","pt-BR") & " do orçado</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Forecast</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita Forecast USD] ) >= 1E9, "US$ " & FORMAT ( [Receita Forecast USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita Forecast USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>última revisão</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Gap Forecast</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Forecast Gap] ) >= 1E9, "US$ " & FORMAT ( [Forecast Gap] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Forecast Gap] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c3 & "'" & ">" & "<em>forecast − realizado</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Projeção do Ano</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Projecao Fechamento Ano] ) >= 1E9, "US$ " & FORMAT ( [Projecao Fechamento Ano] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Projecao Fechamento Ano] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>linear sobre o realizado</em>" & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: f27d5137-35a4-86a4-beeb-7c0d491df7c2
+
+	/// Tooltip HTML de cliente.
+	measure 'HTML Tooltip Cliente' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _nome = SELECTEDVALUE ( dCliente[RazaoSocial], "Vários clientes" )
+			VAR _pais = SELECTEDVALUE ( dCliente[Pais], "—" )
+			VAR _seg = SELECTEDVALUE ( dCliente[Segmento], "—" )
+			VAR _porte = SELECTEDVALUE ( dCliente[Porte], "—" )
+			VAR _canal = SELECTEDVALUE ( dCliente[CanalVenda], "—" )
+			VAR _rfv = [Segmento RFV]
+			VAR _abc = [Classe ABC Cliente]
+			VAR _yoy = [Receita YoY %]
+			VAR _sow = [Share of Wallet]
+			VAR _rec = [Recencia Dias]
+			VAR _cor = IF ( _yoy >= 0, "#1F8A70", "#C0453B" )
+			VAR _serie0 =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@v", CALCULATE ( [Receita USD] )
+			    )
+			VAR _mn0 = MINX ( _serie0, [@v] )
+			VAR _mx0 = MAXX ( _serie0, [@v] )
+			VAR _spk0 =
+			    CONCATENATEX (
+			        _serie0,
+			        "<i style='height:"
+			            & FORMAT ( 14 + DIVIDE ( [@v] - _mn0, _mx0 - _mn0, 0.5 ) * 86, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.tt{height:100%;display:flex;flex-direction:column;gap:6px;padding:2px;
+			    font-family:'Segoe UI',system-ui,sans-serif;color:#16262C}
+			.hd{display:flex;align-items:baseline;justify-content:space-between;gap:6px;
+			    border-left:3px solid #C8763C;padding-left:7px}
+			.hd h1{font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.15;
+			    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+			.hd .tag{font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+			    padding:2px 6px;border-radius:99px;background:rgba(200,118,60,.16);color:#8A4F26;white-space:nowrap}
+			.sub{font-size:8.5px;color:#8C96A5;margin:-3px 0 0 10px;
+			     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+			.kp div{background:rgba(255,255,255,.72);border:1px solid rgba(227,224,217,.8);
+			        border-radius:5px;padding:4px 5px;overflow:hidden}
+			.kp span{display:block;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;
+			         color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp b{display:block;font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.2;white-space:nowrap}
+			.sec{font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#8C96A5;font-weight:700;margin-top:1px}
+			.spk{display:flex;align-items:flex-end;gap:1.5px;height:30px}
+			.spk i{flex:1 1 0;background:#C8763C;border-radius:1.5px 1.5px 0 0;opacity:.55;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.rows{display:flex;flex-direction:column;gap:3px}
+			.r{display:flex;align-items:center;gap:5px;font-size:9px}
+			.r em{font-style:normal;color:#5D6E75;flex:0 0 82px;white-space:nowrap;
+			      overflow:hidden;text-overflow:ellipsis}
+			.r .tr{flex:1;height:6px;background:rgba(233,225,212,.75);border-radius:99px;position:relative;overflow:hidden}
+			.r .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.r b{flex:0 0 auto;font-weight:700;color:#0E2A33;font-size:9px;min-width:42px;text-align:right}
+			.ft{margin-top:auto;font-size:7.5px;color:#8C96A5;display:flex;justify-content:space-between;gap:6px;
+			    border-top:1px solid rgba(227,224,217,.7);padding-top:4px}
+			.ft b{color:#16262C;font-weight:600}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='tt'>"
+			        & "<div class='hd'><h1>" & _nome & "</h1><span class='tag'>" & _rfv & "</span></div>"
+			        & "<div class='sub'>" & _pais & " · " & _seg & " · porte " & _porte & " · " & _canal & "</div>"
+			        & "<div class='kp'>"
+			            & "<div><span>Receita</span><b>" & IF ( ABS ( [Receita USD] ) >= 1E6, "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Receita USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b></div>"
+			            & "<div><span>Margem</span><b>" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div><span>Pedidos</span><b>" & FORMAT ( [Pedidos], "#,0", "pt-BR" ) & "</b></div>"
+			            & "<div><span>Ticket</span><b>" & IF ( ABS ( [Ticket Medio USD] ) >= 1E6, "US$ " & FORMAT ( [Ticket Medio USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Ticket Medio USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='sec'>Receita — últimos 12 meses</div>"
+			        & "<div class='spk'>" & _spk0 & "</div>"
+			        & "<div class='rows'>"
+			            & "<div class='r'><em>Share of Wallet</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( _sow, 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & "#C8763C" & "'></i></div><b>" & FORMAT ( _sow, "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div class='r'><em>Classe ABC</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( SWITCH ( _abc, "A", 1, "B", 0.6, 0.3 ), 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & "#17495A" & "'></i></div><b>" & _abc & "</b></div>"
+			        & "</div>"
+			        & "<div class='ft'><span>Última compra <b>" & FORMAT ( [Data Ultima Compra], "dd/mm/yy", "pt-BR" ) & "</b> · " & FORMAT ( _rec, "#,0", "pt-BR" ) & " d</span>"
+			            & "<span style='color:" & _cor & "'>" & IF ( _yoy >= 0, "▲", "▼" ) & " " & FORMAT ( _yoy, "0.0%", "pt-BR" ) & " YoY</span></div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 1d718b2a-6e3b-3d1b-19b9-6eb8ce006491
+
+	/// Tooltip HTML de produto.
+	measure 'HTML Tooltip Produto' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _nome = SELECTEDVALUE ( dProduto[Produto], "Vários produtos" )
+			VAR _sku = SELECTEDVALUE ( dProduto[SKU], "—" )
+			VAR _cat = SELECTEDVALUE ( dProduto[Categoria], "—" )
+			VAR _linha = SELECTEDVALUE ( dProduto[Linha], "—" )
+			VAR _emb = SELECTEDVALUE ( dProduto[TipoEmbalagem], "—" )
+			VAR _origem = SELECTEDVALUE ( dProduto[EstadoOrigem], "—" )
+			VAR _alvo = SELECTEDVALUE ( dProduto[MargemAlvo], BLANK () )
+			VAR _abc = [Classe ABC Produto]
+			VAR _mrg = [Margem Bruta %]
+			VAR _yoy = [Receita YoY %]
+			VAR _cor = IF ( _yoy >= 0, "#1F8A70", "#C0453B" )
+			VAR _corMrg = IF ( _mrg >= _alvo, "#1F8A70", "#C0453B" )
+			VAR _serie0 =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@v", CALCULATE ( [Receita USD] )
+			    )
+			VAR _mn0 = MINX ( _serie0, [@v] )
+			VAR _mx0 = MAXX ( _serie0, [@v] )
+			VAR _spk0 =
+			    CONCATENATEX (
+			        _serie0,
+			        "<i style='height:"
+			            & FORMAT ( 14 + DIVIDE ( [@v] - _mn0, _mx0 - _mn0, 0.5 ) * 86, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.tt{height:100%;display:flex;flex-direction:column;gap:6px;padding:2px;
+			    font-family:'Segoe UI',system-ui,sans-serif;color:#16262C}
+			.hd{display:flex;align-items:baseline;justify-content:space-between;gap:6px;
+			    border-left:3px solid #C8763C;padding-left:7px}
+			.hd h1{font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.15;
+			    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+			.hd .tag{font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+			    padding:2px 6px;border-radius:99px;background:rgba(200,118,60,.16);color:#8A4F26;white-space:nowrap}
+			.sub{font-size:8.5px;color:#8C96A5;margin:-3px 0 0 10px;
+			     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+			.kp div{background:rgba(255,255,255,.72);border:1px solid rgba(227,224,217,.8);
+			        border-radius:5px;padding:4px 5px;overflow:hidden}
+			.kp span{display:block;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;
+			         color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp b{display:block;font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.2;white-space:nowrap}
+			.sec{font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#8C96A5;font-weight:700;margin-top:1px}
+			.spk{display:flex;align-items:flex-end;gap:1.5px;height:30px}
+			.spk i{flex:1 1 0;background:#C8763C;border-radius:1.5px 1.5px 0 0;opacity:.55;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.rows{display:flex;flex-direction:column;gap:3px}
+			.r{display:flex;align-items:center;gap:5px;font-size:9px}
+			.r em{font-style:normal;color:#5D6E75;flex:0 0 82px;white-space:nowrap;
+			      overflow:hidden;text-overflow:ellipsis}
+			.r .tr{flex:1;height:6px;background:rgba(233,225,212,.75);border-radius:99px;position:relative;overflow:hidden}
+			.r .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.r b{flex:0 0 auto;font-weight:700;color:#0E2A33;font-size:9px;min-width:42px;text-align:right}
+			.ft{margin-top:auto;font-size:7.5px;color:#8C96A5;display:flex;justify-content:space-between;gap:6px;
+			    border-top:1px solid rgba(227,224,217,.7);padding-top:4px}
+			.ft b{color:#16262C;font-weight:600}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='tt'>"
+			        & "<div class='hd'><h1>" & _nome & "</h1><span class='tag'>ABC " & _abc & "</span></div>"
+			        & "<div class='sub'>" & _sku & " · " & _cat & " · " & _linha & " · " & _emb & " · " & _origem & "</div>"
+			        & "<div class='kp'>"
+			            & "<div><span>Receita</span><b>" & IF ( ABS ( [Receita USD] ) >= 1E6, "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Receita USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b></div>"
+			            & "<div><span>Margem</span><b>" & FORMAT ( _mrg, "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div><span>Volume</span><b>" & FORMAT ( [Toneladas], "#,0.0", "pt-BR" ) & " t</b></div>"
+			            & "<div><span>US$/kg</span><b>" & FORMAT ( [Preco Medio por Kg], "#,0.00", "pt-BR" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='sec'>Receita — últimos 12 meses</div>"
+			        & "<div class='spk'>" & _spk0 & "</div>"
+			        & "<div class='rows'>"
+			            & "<div class='r'><em>Margem alvo</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( _alvo, 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & "#8FA98F" & "'></i></div><b>" & FORMAT ( _alvo, "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div class='r'><em>Margem real</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( _mrg, 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & _corMrg & "'></i></div><b>" & FORMAT ( _mrg, "0.0%", "pt-BR" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='ft'><span>Margem/kg <b>US$ " & FORMAT ( [Margem por Kg], "#,0.00", "pt-BR" ) & "</b></span>"
+			            & "<span style='color:" & _cor & "'>" & IF ( _yoy >= 0, "▲", "▼" ) & " " & FORMAT ( _yoy, "0.0%", "pt-BR" ) & " YoY</span></div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: d22251bd-22b2-93b2-9cb5-4f03d697be80
+
+	/// Tooltip HTML de mercado.
+	measure 'HTML Tooltip Pais' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _nome = SELECTEDVALUE ( dPais[Pais], "Vários mercados" )
+			VAR _cont = SELECTEDVALUE ( dPais[Continente], "—" )
+			VAR _reg = SELECTEDVALUE ( dPais[Regiao], "—" )
+			VAR _class = SELECTEDVALUE ( dPais[ClassificacaoMercado], "—" )
+			VAR _risco = SELECTEDVALUE ( dPais[RiscoPais], "—" )
+			VAR _tarifa = SELECTEDVALUE ( dPais[TarifaMediaImportacao], BLANK () )
+			VAR _otif = [OTIF %]
+			VAR _atr = [% Embarques Atrasados]
+			VAR _yoy = [Receita YoY %]
+			VAR _cor = IF ( _yoy >= 0, "#1F8A70", "#C0453B" )
+			VAR _corOtif = IF ( _otif >= 0.9, "#1F8A70", IF ( _otif >= 0.8, "#D9A441", "#C0453B" ) )
+			VAR _serie0 =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@v", CALCULATE ( [Receita USD] )
+			    )
+			VAR _mn0 = MINX ( _serie0, [@v] )
+			VAR _mx0 = MAXX ( _serie0, [@v] )
+			VAR _spk0 =
+			    CONCATENATEX (
+			        _serie0,
+			        "<i style='height:"
+			            & FORMAT ( 14 + DIVIDE ( [@v] - _mn0, _mx0 - _mn0, 0.5 ) * 86, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.tt{height:100%;display:flex;flex-direction:column;gap:6px;padding:2px;
+			    font-family:'Segoe UI',system-ui,sans-serif;color:#16262C}
+			.hd{display:flex;align-items:baseline;justify-content:space-between;gap:6px;
+			    border-left:3px solid #C8763C;padding-left:7px}
+			.hd h1{font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.15;
+			    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+			.hd .tag{font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+			    padding:2px 6px;border-radius:99px;background:rgba(200,118,60,.16);color:#8A4F26;white-space:nowrap}
+			.sub{font-size:8.5px;color:#8C96A5;margin:-3px 0 0 10px;
+			     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+			.kp div{background:rgba(255,255,255,.72);border:1px solid rgba(227,224,217,.8);
+			        border-radius:5px;padding:4px 5px;overflow:hidden}
+			.kp span{display:block;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;
+			         color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp b{display:block;font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.2;white-space:nowrap}
+			.sec{font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#8C96A5;font-weight:700;margin-top:1px}
+			.spk{display:flex;align-items:flex-end;gap:1.5px;height:30px}
+			.spk i{flex:1 1 0;background:#C8763C;border-radius:1.5px 1.5px 0 0;opacity:.55;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.rows{display:flex;flex-direction:column;gap:3px}
+			.r{display:flex;align-items:center;gap:5px;font-size:9px}
+			.r em{font-style:normal;color:#5D6E75;flex:0 0 82px;white-space:nowrap;
+			      overflow:hidden;text-overflow:ellipsis}
+			.r .tr{flex:1;height:6px;background:rgba(233,225,212,.75);border-radius:99px;position:relative;overflow:hidden}
+			.r .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.r b{flex:0 0 auto;font-weight:700;color:#0E2A33;font-size:9px;min-width:42px;text-align:right}
+			.ft{margin-top:auto;font-size:7.5px;color:#8C96A5;display:flex;justify-content:space-between;gap:6px;
+			    border-top:1px solid rgba(227,224,217,.7);padding-top:4px}
+			.ft b{color:#16262C;font-weight:600}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='tt'>"
+			        & "<div class='hd'><h1>" & _nome & "</h1><span class='tag'>" & _class & "</span></div>"
+			        & "<div class='sub'>" & _cont & " · " & _reg & " · risco " & _risco & " · tarifa " & FORMAT ( _tarifa, "0.0%", "pt-BR" ) & "</div>"
+			        & "<div class='kp'>"
+			            & "<div><span>Receita</span><b>" & IF ( ABS ( [Receita USD] ) >= 1E6, "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Receita USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b></div>"
+			            & "<div><span>Margem</span><b>" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div><span>Volume</span><b>" & FORMAT ( [Toneladas], "#,0.0", "pt-BR" ) & " t</b></div>"
+			            & "<div><span>Clientes</span><b>" & FORMAT ( [Clientes Ativos], "#,0", "pt-BR" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='sec'>Receita — últimos 12 meses</div>"
+			        & "<div class='spk'>" & _spk0 & "</div>"
+			        & "<div class='rows'>"
+			            & "<div class='r'><em>OTIF</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( _otif, 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & _corOtif & "'></i></div><b>" & FORMAT ( _otif, "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div class='r'><em>Embarq. atraso</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( _atr, 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & "#C8763C" & "'></i></div><b>" & FORMAT ( _atr, "0.0%", "pt-BR" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='ft'><span>Lead time <b>" & FORMAT ( [Lead Time Real], "#,0.0", "pt-BR" ) & " d</b> · frete US$ " & FORMAT ( [Frete por Kg], "#,0.00", "pt-BR" ) & "/kg</span>"
+			            & "<span style='color:" & _cor & "'>" & IF ( _yoy >= 0, "▲", "▼" ) & " " & FORMAT ( _yoy, "0.0%", "pt-BR" ) & " YoY</span></div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: cea7a659-53e7-221e-2702-daff9b2b20cc
+
+	/// Tooltip HTML de vendedor.
+	measure 'HTML Tooltip Vendedor' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _nome = SELECTEDVALUE ( dVendedor[NomeVendedor], "Vários vendedores" )
+			VAR _cargo = SELECTEDVALUE ( dVendedor[Cargo], "—" )
+			VAR _ger = SELECTEDVALUE ( dVendedor[Gerente], "—" )
+			VAR _reg = SELECTEDVALUE ( dVendedor[RegiaoResponsavel], "—" )
+			VAR _at = [Atingimento %]
+			VAR _conc = [Concentracao Carteira Vendedor]
+			VAR _status = [Status Meta]
+			VAR _yoy = [Receita YoY %]
+			VAR _cor = IF ( _yoy >= 0, "#1F8A70", "#C0453B" )
+			VAR _corAt = IF ( _at >= 1, "#1F8A70", IF ( _at >= 0.9, "#D9A441", "#C0453B" ) )
+			VAR _corConc = IF ( _conc >= 0.4, "#C0453B", IF ( _conc >= 0.25, "#D9A441", "#1F8A70" ) )
+			VAR _serie0 =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@v", CALCULATE ( [Receita USD] )
+			    )
+			VAR _mn0 = MINX ( _serie0, [@v] )
+			VAR _mx0 = MAXX ( _serie0, [@v] )
+			VAR _spk0 =
+			    CONCATENATEX (
+			        _serie0,
+			        "<i style='height:"
+			            & FORMAT ( 14 + DIVIDE ( [@v] - _mn0, _mx0 - _mn0, 0.5 ) * 86, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.tt{height:100%;display:flex;flex-direction:column;gap:6px;padding:2px;
+			    font-family:'Segoe UI',system-ui,sans-serif;color:#16262C}
+			.hd{display:flex;align-items:baseline;justify-content:space-between;gap:6px;
+			    border-left:3px solid #C8763C;padding-left:7px}
+			.hd h1{font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.15;
+			    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+			.hd .tag{font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+			    padding:2px 6px;border-radius:99px;background:rgba(200,118,60,.16);color:#8A4F26;white-space:nowrap}
+			.sub{font-size:8.5px;color:#8C96A5;margin:-3px 0 0 10px;
+			     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+			.kp div{background:rgba(255,255,255,.72);border:1px solid rgba(227,224,217,.8);
+			        border-radius:5px;padding:4px 5px;overflow:hidden}
+			.kp span{display:block;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;
+			         color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.kp b{display:block;font-size:12.5px;font-weight:700;color:#0E2A33;line-height:1.2;white-space:nowrap}
+			.sec{font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#8C96A5;font-weight:700;margin-top:1px}
+			.spk{display:flex;align-items:flex-end;gap:1.5px;height:30px}
+			.spk i{flex:1 1 0;background:#C8763C;border-radius:1.5px 1.5px 0 0;opacity:.55;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.rows{display:flex;flex-direction:column;gap:3px}
+			.r{display:flex;align-items:center;gap:5px;font-size:9px}
+			.r em{font-style:normal;color:#5D6E75;flex:0 0 82px;white-space:nowrap;
+			      overflow:hidden;text-overflow:ellipsis}
+			.r .tr{flex:1;height:6px;background:rgba(233,225,212,.75);border-radius:99px;position:relative;overflow:hidden}
+			.r .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.r b{flex:0 0 auto;font-weight:700;color:#0E2A33;font-size:9px;min-width:42px;text-align:right}
+			.ft{margin-top:auto;font-size:7.5px;color:#8C96A5;display:flex;justify-content:space-between;gap:6px;
+			    border-top:1px solid rgba(227,224,217,.7);padding-top:4px}
+			.ft b{color:#16262C;font-weight:600}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='tt'>"
+			        & "<div class='hd'><h1>" & _nome & "</h1><span class='tag'>" & _status & "</span></div>"
+			        & "<div class='sub'>" & _cargo & " · " & _reg & " · reporta a " & _ger & "</div>"
+			        & "<div class='kp'>"
+			            & "<div><span>Receita</span><b>" & IF ( ABS ( [Receita USD] ) >= 1E6, "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Receita USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b></div>"
+			            & "<div><span>Meta</span><b>" & IF ( ABS ( [Meta Receita USD] ) >= 1E6, "US$ " & FORMAT ( [Meta Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Meta Receita USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b></div>"
+			            & "<div><span>Clientes</span><b>" & FORMAT ( [Clientes Ativos], "#,0", "pt-BR" ) & "</b></div>"
+			            & "<div><span>Margem</span><b>" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='sec'>Receita — últimos 12 meses</div>"
+			        & "<div class='spk'>" & _spk0 & "</div>"
+			        & "<div class='rows'>"
+			            & "<div class='r'><em>Atingimento</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( DIVIDE ( _at, 1.5 ), 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & _corAt & "'></i></div><b>" & FORMAT ( _at, "0.0%", "pt-BR" ) & "</b></div>"
+			            & "<div class='r'><em>Maior cliente</em><div class='tr'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( _conc, 0 ), 1 ) * 100, "0", "en-US" )
+			            & "%;background:" & _corConc & "'></i></div><b>" & FORMAT ( _conc, "0.0%", "pt-BR" ) & "</b></div>"
+			        & "</div>"
+			        & "<div class='ft'><span>Gap <b>" & IF ( ABS ( [Gap Meta USD] ) >= 1E6, "US$ " & FORMAT ( [Gap Meta USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi", "US$ " & FORMAT ( [Gap Meta USD] / 1E3, "#,0", "pt-BR" ) & " k" ) & "</b> · novos " & FORMAT ( [Novos Clientes], "#,0", "pt-BR" ) & "</span>"
+			            & "<span style='color:" & _cor & "'>" & IF ( _yoy >= 0, "▲", "▼" ) & " " & FORMAT ( _yoy, "0.0%", "pt-BR" ) & " YoY</span></div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 102d00f5-8bf2-3e8a-cdee-dcfb1b2ac118
+
+	measure 'HTML Rotas Globais Animadas' =
+			
+			VAR _HTML =
+			"
+			<div style='
+			    width:100%;
+			    height:100%;
+			    overflow:hidden;
+			    background:transparent;
+			    position:relative;
+			'>
+			
+			<style>
+			
+			.auroraRoute {
+			    fill:none;
+			    stroke-linecap:round;
+			    stroke-linejoin:round;
+			    stroke-dasharray:12 15;
+			    animation:moveRoute 5s linear infinite;
+			}
+			
+			.auroraRoute2 {
+			    fill:none;
+			    stroke-linecap:round;
+			    stroke-linejoin:round;
+			    stroke-dasharray:5 14;
+			    animation:moveRoute2 8s linear infinite;
+			}
+			
+			@keyframes moveRoute {
+			    from {
+			        stroke-dashoffset:0;
+			    }
+			    to {
+			        stroke-dashoffset:-270;
+			    }
+			}
+			
+			@keyframes moveRoute2 {
+			    from {
+			        stroke-dashoffset:0;
+			    }
+			    to {
+			        stroke-dashoffset:-190;
+			    }
+			}
+			
+			.hubPulse {
+			    transform-box:fill-box;
+			    transform-origin:center;
+			    animation:pulseHub 2.5s ease-out infinite;
+			}
+			
+			@keyframes pulseHub {
+			    0% {
+			        opacity:.80;
+			        transform:scale(.4);
+			    }
+			
+			    70% {
+			        opacity:.18;
+			        transform:scale(2);
+			    }
+			
+			    100% {
+			        opacity:0;
+			        transform:scale(2.5);
+			    }
+			}
+			
+			.destinationPulse {
+			    animation:destinationGlow 2.8s ease-in-out infinite;
+			}
+			
+			@keyframes destinationGlow {
+			    0%,100% {
+			        opacity:.45;
+			    }
+			
+			    50% {
+			        opacity:1;
+			    }
+			}
+			
+			</style>
+			
+			
+			<svg
+			    width='100%'
+			    height='100%'
+			    viewBox='0 0 1600 900'
+			    preserveAspectRatio='xMidYMid meet'
+			    xmlns='http://www.w3.org/2000/svg'>
+			
+			<defs>
+			
+			    <linearGradient
+			        id='goldRoute'
+			        x1='0%'
+			        y1='100%'
+			        x2='100%'
+			        y2='0%'>
+			
+			        <stop
+			            offset='0%'
+			            stop-color='#A97929'
+			            stop-opacity='.20'/>
+			
+			        <stop
+			            offset='45%'
+			            stop-color='#D6A84C'
+			            stop-opacity='.75'/>
+			
+			        <stop
+			            offset='70%'
+			            stop-color='#FFE08B'
+			            stop-opacity='1'/>
+			
+			        <stop
+			            offset='100%'
+			            stop-color='#C99132'
+			            stop-opacity='.35'/>
+			
+			    </linearGradient>
+			
+			
+			    <linearGradient
+			        id='tealRoute'
+			        x1='0%'
+			        y1='100%'
+			        x2='100%'
+			        y2='0%'>
+			
+			        <stop
+			            offset='0%'
+			            stop-color='#0B5554'
+			            stop-opacity='.10'/>
+			
+			        <stop
+			            offset='50%'
+			            stop-color='#65C1BA'
+			            stop-opacity='.60'/>
+			
+			        <stop
+			            offset='100%'
+			            stop-color='#0B5554'
+			            stop-opacity='.15'/>
+			
+			    </linearGradient>
+			
+			
+			    <filter
+			        id='glow'
+			        x='-100%'
+			        y='-100%'
+			        width='300%'
+			        height='300%'>
+			
+			        <feGaussianBlur
+			            stdDeviation='4'
+			            result='blur'/>
+			
+			        <feMerge>
+			
+			            <feMergeNode in='blur'/>
+			
+			            <feMergeNode in='SourceGraphic'/>
+			
+			        </feMerge>
+			
+			    </filter>
+			
+			</defs>
+			
+			
+			<!-- =============================
+			     BRASIL PARA AMERICA DO NORTE
+			     ============================= -->
+			
+			<path
+			    d='M690 665 C630 540 560 350 445 230'
+			    class='auroraRoute'
+			    stroke='url(#goldRoute)'
+			    stroke-width='3'
+			    filter='url(#glow)'
+			/>
+			
+			<path
+			    d='M690 665 C630 540 560 350 445 230'
+			    class='auroraRoute2'
+			    stroke='url(#tealRoute)'
+			    stroke-width='1.4'
+			/>
+			
+			
+			<!-- =============================
+			     BRASIL PARA EUROPA
+			     ============================= -->
+			
+			<path
+			    d='M690 665 C760 420 900 265 1050 215'
+			    class='auroraRoute'
+			    stroke='url(#goldRoute)'
+			    stroke-width='3.2'
+			    filter='url(#glow)'
+			    style='animation-duration:4.2s'
+			/>
+			
+			<path
+			    d='M690 665 C760 420 900 265 1050 215'
+			    class='auroraRoute2'
+			    stroke='url(#tealRoute)'
+			    stroke-width='1.5'
+			/>
+			
+			
+			<!-- =============================
+			     BRASIL PARA ORIENTE MEDIO
+			     ============================= -->
+			
+			<path
+			    d='M690 665 C850 445 1070 345 1230 370'
+			    class='auroraRoute'
+			    stroke='url(#goldRoute)'
+			    stroke-width='2.5'
+			    filter='url(#glow)'
+			    style='animation-duration:5.5s'
+			/>
+			
+			
+			<!-- =============================
+			     BRASIL PARA ASIA
+			     ============================= -->
+			
+			<path
+			    d='M690 665 C890 305 1230 180 1440 300'
+			    class='auroraRoute'
+			    stroke='url(#goldRoute)'
+			    stroke-width='2.8'
+			    filter='url(#glow)'
+			    style='animation-duration:6.2s'
+			/>
+			
+			<path
+			    d='M690 665 C890 305 1230 180 1440 300'
+			    class='auroraRoute2'
+			    stroke='url(#tealRoute)'
+			    stroke-width='1.3'
+			    style='animation-duration:8.5s'
+			/>
+			
+			
+			<!-- =============================
+			     BRASIL PARA AMERICA LATINA
+			     ============================= -->
+			
+			<path
+			    d='M690 665 C610 700 505 690 410 625'
+			    class='auroraRoute'
+			    stroke='url(#goldRoute)'
+			    stroke-width='2.2'
+			    filter='url(#glow)'
+			    style='animation-duration:3.8s'
+			/>
+			
+			
+			<!-- =============================
+			     BRASIL PARA OCEANIA
+			     ============================= -->
+			
+			<path
+			    d='M690 665 C970 510 1290 515 1490 650'
+			    class='auroraRoute'
+			    stroke='url(#goldRoute)'
+			    stroke-width='2'
+			    filter='url(#glow)'
+			    style='animation-duration:7s'
+			/>
+			
+			
+			<!-- =============================
+			     HUB BRASIL
+			     ============================= -->
+			
+			<circle
+			    cx='690'
+			    cy='665'
+			    r='24'
+			    fill='none'
+			    stroke='#D6A84C'
+			    stroke-width='2'
+			    class='hubPulse'
+			/>
+			
+			<circle
+			    cx='690'
+			    cy='665'
+			    r='10'
+			    fill='#D6A84C'
+			    filter='url(#glow)'
+			/>
+			
+			<circle
+			    cx='690'
+			    cy='665'
+			    r='4'
+			    fill='#FFF3CE'
+			/>
+			
+			
+			<!-- =============================
+			     DESTINOS
+			     ============================= -->
+			
+			<circle
+			    cx='445'
+			    cy='230'
+			    r='6'
+			    fill='#E8BD63'
+			    filter='url(#glow)'
+			    class='destinationPulse'
+			/>
+			
+			<circle
+			    cx='1050'
+			    cy='215'
+			    r='7'
+			    fill='#E8BD63'
+			    filter='url(#glow)'
+			    class='destinationPulse'
+			/>
+			
+			<circle
+			    cx='1230'
+			    cy='370'
+			    r='5'
+			    fill='#77C3BE'
+			    filter='url(#glow)'
+			    class='destinationPulse'
+			/>
+			
+			<circle
+			    cx='1440'
+			    cy='300'
+			    r='6'
+			    fill='#E8BD63'
+			    filter='url(#glow)'
+			    class='destinationPulse'
+			/>
+			
+			<circle
+			    cx='410'
+			    cy='625'
+			    r='5'
+			    fill='#77C3BE'
+			    filter='url(#glow)'
+			    class='destinationPulse'
+			/>
+			
+			<circle
+			    cx='1490'
+			    cy='650'
+			    r='5'
+			    fill='#E8BD63'
+			    filter='url(#glow)'
+			    class='destinationPulse'
+			/>
+			
+			</svg>
+			
+			</div>
+			"
+			
+			RETURN
+			    _HTML
+		lineageTag: 7aac6fc2-1ec7-4957-8aa8-7b7d50219a96
+
+	/// Painel de KPIs da pagina de drill-through Detalhe Cliente.
+	measure 'HTML Painel Detalhe Cliente' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s1", CALCULATE ( [Margem Bruta %] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn1 = MINX ( _serie, [@s1] )
+			VAR _mx1 = MAXX ( _serie, [@s1] )
+			VAR _pt1 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s1] - _mn1, _mx1 - _mn1, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _d1 = [Margem YoY p.p.] * 100
+			VAR _c1 = IF ( _d1 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c2 = IF ( [Share of Wallet] >= 0.4, "#1F8A70", IF ( [Share of Wallet] >= 0.25, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Margem</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c1 & "'" & ">" & IF ( _d1 >= 0, "▲ ", "▼ " ) & FORMAT ( _d1, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#17495A'>" & _pt1 & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Share of Wallet</div>"
+			            & "<div class='vl'" & " style='color:" & _c2 & "'" & ">" & FORMAT ( [Share of Wallet], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>receita / potencial</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [Share of Wallet], 0 ), 1 ) / 1 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c2 & "'></i><u style='left:40.0%'></u></div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>Classificação RFV</div>"
+			            & "<div class='vl'" & ">" & [Segmento RFV] & "</div>"
+			            & "<div class='dt'" & ">" & "<em>classe " & [Classe ABC Cliente] & " · " & FORMAT([Recencia Dias],"#,0","pt-BR") & " d sem comprar</em>" & "</div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 9c2aba4b-a3f6-5c28-4ee9-9d41e8a7f2e6
+
+	/// Painel de KPIs da pagina de drill-through Detalhe Mercado.
+	measure 'HTML Painel Detalhe Mercado' =
+			VAR _fim = MAX ( dCalendario[Data] )
+			VAR _serie =
+			    ADDCOLUMNS (
+			        CALCULATETABLE (
+			            VALUES ( dCalendario[AnoMesNumero] ),
+			            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+			        ),
+			        "@s0", CALCULATE ( [Receita USD] ),
+			        "@s2", CALCULATE ( [Margem Bruta %] )
+			    )
+			VAR _mn0 = MINX ( _serie, [@s0] )
+			VAR _mx0 = MAXX ( _serie, [@s0] )
+			VAR _pt0 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _mn2 = MINX ( _serie, [@s2] )
+			VAR _mx2 = MAXX ( _serie, [@s2] )
+			VAR _pt2 =
+			    CONCATENATEX (
+			        _serie,
+			        "<i style='height:"
+			            & FORMAT ( 12 + DIVIDE ( [@s2] - _mn2, _mx2 - _mn2, 0.5 ) * 88, "0", "en-US" )
+			            & "%'></i>",
+			        "",
+			        dCalendario[AnoMesNumero], ASC
+			    )
+			VAR _d0 = [Receita YoY %]
+			VAR _c0 = IF ( _d0 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c1 = IF ( [Receita YoY %] >= 0, "#1F8A70", "#C0453B" )
+			VAR _d2 = [Margem YoY p.p.] * 100
+			VAR _c2 = IF ( _d2 >= 0, "#1F8A70", "#C0453B" )
+			VAR _c3 = IF ( [OTIF %] >= 0.9, "#1F8A70", IF ( [OTIF %] >= 0.8, "#D9A441", "#C0453B" ) )
+			
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent;overflow:hidden}
+			.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+			.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+			.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+			.t.b:before{background:#17495A}
+			.t.g:before{background:#8FA98F}
+			.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+			.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+			.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+			.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+			.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+			.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+			.spk i:last-child{opacity:1}
+			.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+			.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+			.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+			        & "<div class='t'><div class='lb'>Receita</div>"
+			            & "<div class='vl'" & ">" & IF ( ABS ( [Receita USD] ) >= 1E9, "US$ " & FORMAT ( [Receita USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c0 & "'" & ">" & IF ( _d0 >= 0, "▲ ", "▼ " ) & FORMAT ( _d0, "0.0%", "pt-BR" ) & " " & "<em>vs ano anterior</em>" & "</div>"
+			            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+			            & "</div>"
+			        & "<div class='t b'><div class='lb'>Crescimento</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Receita YoY %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c1 & "'" & ">" & "<em>" & [Titulo Periodo] & "</em>" & "</div>"
+			            & "</div>"
+			        & "<div class='t g'><div class='lb'>Margem</div>"
+			            & "<div class='vl'" & ">" & FORMAT ( [Margem Bruta %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & " style='color:" & _c2 & "'" & ">" & IF ( _d2 >= 0, "▲ ", "▼ " ) & FORMAT ( _d2, "0.0", "pt-BR" ) & " p.p. " & "<em>YoY</em>" & "</div>"
+			            & "<div class='spk' style='color:#8FA98F'>" & _pt2 & "</div>"
+			            & "</div>"
+			        & "<div class='t'><div class='lb'>OTIF</div>"
+			            & "<div class='vl'" & " style='color:" & _c3 & "'" & ">" & FORMAT ( [OTIF %], "0.0%", "pt-BR" ) & "</div>"
+			            & "<div class='dt'" & ">" & "<em>" & FORMAT([% Embarques Atrasados],"0.0%","pt-BR") & " com atraso</em>" & "</div>"
+			            & "<div class='bar'><i style='width:"
+			            & FORMAT ( MIN ( MAX ( [OTIF %], 0 ), 1 ) / 1 * 100, "0.0", "en-US" )
+			            & "%;background:" & _c3 & "'></i><u style='left:90.0%'></u></div>"
+			            & "</div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 760d0360-36d1-e019-f5fa-38de52920abf
+
+	/// Guia de analise (capa): botao no canto, painel abre por hover para a direita, fonte clara.
+	measure 'HTML Guia de Analise' =
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent}
+			.g{position:relative;height:100%;font-family:'Segoe UI',system-ui,sans-serif}
+			.hoverArea{position:absolute;top:6px;left:6px;z-index:20}
+			.trigger{display:inline-flex;align-items:center;gap:7px;
+			  padding:clamp(8px,.62vw,12px) clamp(15px,1.15vw,22px);border-radius:99px;
+			  background:#C8763C;color:#FFF;font-size:clamp(12.5px,.95vw,17px);font-weight:700;
+			  letter-spacing:.02em;cursor:pointer;user-select:none;
+			  box-shadow:0 3px 12px rgba(0,0,0,.45);
+			  transition:background .2s ease,transform .2s ease;white-space:nowrap}
+			.hoverArea:hover .trigger{background:#E08D4F;transform:scale(1.04)}
+			.panel{position:absolute;top:0;left:calc(100% + 12px);
+			  width:clamp(560px,62vw,900px);max-height:min(640px,calc(100vh - 24px));
+			  background:transparent;overflow-y:auto;padding-right:4px;
+			  opacity:0;transform:translateX(-14px);pointer-events:none;
+			  transition:opacity .18s ease,transform .18s ease}
+			.hoverArea:hover .panel{opacity:1;transform:translateX(0);pointer-events:auto}
+			.panel::-webkit-scrollbar{width:8px}
+			.panel::-webkit-scrollbar-thumb{background:rgba(200,118,60,.5);border-radius:99px}
+			.gh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+			    border-left:4px solid #C8763C;padding:2px 0 2px 11px;margin-bottom:6px}
+			.gh h1{font-size:clamp(20px,1.5vw,30px);font-weight:700;color:#F2F7F8;letter-spacing:-.01em;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+			.gh span{font-size:clamp(11px,.85vw,15px);color:#9FBCC4}
+			.hint{font-size:clamp(12px,.9vw,16px);color:#C7D5DA;margin:0 0 13px 15px}
+			.hint b{color:#F2F7F8}
+			details{background:rgba(14,42,51,.88);border:1px solid rgba(159,188,196,.3);
+			        border-radius:9px;margin-bottom:8px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+			details[open]{background:rgba(14,42,51,.96);border-color:rgba(200,118,60,.62)}
+			summary{cursor:pointer;list-style:none;padding:clamp(10px,.75vw,15px) clamp(13px,1vw,18px);
+			        display:flex;align-items:baseline;gap:11px;user-select:none}
+			summary::-webkit-details-marker{display:none}
+			summary::after{content:'+';margin-left:auto;font-size:clamp(16px,1.2vw,23px);color:#E08D4F;
+			               font-weight:700;line-height:1}
+			details[open] summary::after{content:'–'}
+			summary:hover{background:rgba(200,118,60,.16)}
+			.num{font-size:clamp(11px,.85vw,15px);font-weight:700;letter-spacing:.05em;color:#FFF;
+			     background:#C8763C;border-radius:4px;padding:2px 7px;flex:none}
+			details[open] .num{background:#E08D4F}
+			.tit{font-size:clamp(14px,1.05vw,19px);font-weight:700;color:#F2F7F8;flex:none}
+			.q{font-size:clamp(12px,.9vw,16px);color:#9FBCC4;font-style:italic;
+			   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+			.body{padding:2px clamp(14px,1.05vw,19px) clamp(13px,1vw,18px);display:flex;flex-direction:column;gap:clamp(9px,.7vw,14px)}
+			.v{display:grid;grid-template-columns:clamp(180px,17vw,260px) 1fr;gap:clamp(13px,1vw,20px);align-items:baseline}
+			.v em{font-style:normal;font-size:clamp(12.5px,.95vw,17px);font-weight:600;color:#E8A877}
+			.v p{font-size:clamp(12.5px,.95vw,17px);color:#C7D5DA;line-height:1.55}
+			.sep{font-size:clamp(11px,.85vw,15px);letter-spacing:.08em;text-transform:uppercase;
+			     color:#9FBCC4;font-weight:700;margin:15px 0 7px 2px}
+			.x{background:rgba(23,73,90,.72);border:1px solid rgba(159,188,196,.3);
+			   border-left:4px solid #C8763C;border-radius:8px;
+			   padding:clamp(11px,.85vw,16px) clamp(13px,1vw,18px);margin-bottom:8px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+			.x .tit{display:block;margin-bottom:3px}
+			.x .how{font-size:clamp(11px,.85vw,15px);color:#9FBCC4;margin-bottom:6px}
+			.x p{font-size:clamp(12.5px,.95vw,17px);color:#C7D5DA;line-height:1.55}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='g'><div class='hoverArea'><div class='trigger'>&#128214; Guia de Análise</div><div class='panel'>"
+			        & "<div class='gh'><h1>Guia de análise</h1><span>11 páginas · 4 dicas de ferramenta · 2 dossiês</span></div>"
+			        & "<div class='hint'>Clique em qualquer página para <b>expandir</b> o detalhe dos visuais e o que cada um permite analisar.</div>"
+			        & "<details><summary><span class='num'>01</span><span class='tit'>Executive Overview</span><span class='q'>Estamos crescendo, atingindo meta e preservando rentabilidade?</span></summary><div class='body'><div class='v'><em>Painel de 8 KPIs</em><p>Leitura de 3 segundos. As barras de 12 meses mostram se o número atual é ponto fora da curva ou tendência. A barra de Atingimento tem marca nos 100%: à esquerda dela, o ano está em risco.</p></div><div class='v'><em>Receita mensal: realizado x ano anterior x meta</em><p>Compare as três linhas. Realizado acima do ano anterior mas abaixo da meta significa que a meta subiu mais rápido que a operação.</p></div><div class='v'><em>Receita por mercado (mapa)</em><p>Concentração geográfica. Poucos países escuros = risco de dependência.</p></div><div class='v'><em>De onde veio a variação YoY (cascata)</em><p>Atribui o crescimento por continente. Serve para responder ""crescemos por quê"" — não é o mesmo que ""onde vendemos mais"".</p></div><div class='v'><em>Destaques por mercado</em><p>Cruza crescimento, margem e atingimento. Procure linhas com receita alta e margem baixa.</p></div></div></details>"
+			        & "<details><summary><span class='num'>02</span><span class='tit'>Sales Performance</span><span class='q'>O ritmo comercial está acima ou abaixo do compromisso assumido?</span></summary><div class='body'><div class='v'><em>Realizado mensal e atingimento acumulado</em><p>A coluna é o mês, a linha é o acumulado. A linha cruzando 100% no meio do ano indica meta subdimensionada.</p></div><div class='v'><em>Região comercial: realizado x meta</em><p>Barras pareadas. Região que bate meta com receita pequena pode ter meta frouxa.</p></div><div class='v'><em>Receita por executivo comercial</em><p>Ranking. Passe o mouse para ver a ficha do vendedor.</p></div><div class='v'><em>Decomposição por canal e categoria</em><p>A coluna Contribuição para Crescimento mostra quanto cada combinação puxou o total — não confunda com crescimento próprio.</p></div></div></details>"
+			        & "<details><summary><span class='num'>03</span><span class='tit'>Customers</span><span class='q'>Quem sustenta a receita, quem está escapando e quanto isso custa?</span></summary><div class='body'><div class='v'><em>Pareto de clientes</em><p>Barras por cliente e linha do acumulado. Onde a linha cruza 80% está sua dependência real.</p></div><div class='v'><em>Distribuição RFV da carteira</em><p>Campeões, Leais, Em Risco, Hibernando, Perdidos. Blocos grandes em Em Risco e Hibernando são receita ainda recuperável.</p></div><div class='v'><em>Receita por classe ABC</em><p>Concentração por valor. Compare com o RFV: classe A em situação Em Risco é a combinação mais cara.</p></div><div class='v'><em>Clientes ativos por porte</em><p>Série temporal por porte. Queda em um porte específico aponta problema de proposta, não de mercado.</p></div><div class='v'><em>Carteira detalhada</em><p>Ordene por Recência para achar risco: recência alta com receita alta é conta escapando.</p></div></div></details>"
+			        & "<details><summary><span class='num'>04</span><span class='tit'>Customer Potential</span><span class='q'>Onde existe receita não capturada e qual conta merece prioridade?</span></summary><div class='body'><div class='v'><em>Receita x Share of Wallet (dispersão)</em><p>O tamanho da bolha é o potencial. Bolha grande à esquerda = muito potencial, pouca penetração. É a região de maior retorno.</p></div><div class='v'><em>Ranking de oportunidade</em><p>O Score de Oportunidade pondera gap absoluto contra baixa penetração — prioriza quem tem espaço e ainda não foi trabalhado.</p></div><div class='v'><em>White space por segmento</em><p>Categorias que o segmento poderia comprar e não compra. Cruze com Penetração de Categorias.</p></div><div class='v'><em>Penetração por categoria</em><p>Quantos clientes compram cada categoria. Categoria com poucos compradores e margem boa é candidata a cross-sell.</p></div></div></details>"
+			        & "<details><summary><span class='num'>05</span><span class='tit'>Products</span><span class='q'>Qual portfólio cresce com rentabilidade e qual cresce destruindo margem?</span></summary><div class='body'><div class='v'><em>Matriz BCG adaptada</em><p>Crescimento no eixo x, margem no y, tamanho = receita. O quadrante inferior direito — cresce muito, margem baixa — é o que merece revisão de preço.</p></div><div class='v'><em>Receita e margem por categoria</em><p>Barras pareadas. Categoria com receita alta e margem em valor baixa está sendo vendida barato demais.</p></div><div class='v'><em>Evolução da margem por categoria</em><p>Tendência. Margem caindo de forma consistente indica erosão de preço, não sazonalidade.</p></div><div class='v'><em>Portfólio por SKU</em><p>Classe ABC e margem por quilo. Margem/kg é o indicador mais honesto num negócio de exportação por peso.</p></div></div></details>"
+			        & "<details><summary><span class='num'>06</span><span class='tit'>Markets</span><span class='q'>Quais mercados sustentam hoje e quais sustentarão os próximos anos?</span></summary><div class='body'><div class='v'><em>Market Opportunity Matrix</em><p>Crescimento x margem por país. O canto superior direito é onde investir; o inferior esquerdo, onde revisar a operação.</p></div><div class='v'><em>Distribuição global (mapa)</em><p>Leitura geográfica da concentração.</p></div><div class='v'><em>Ranking de mercados</em><p>Ordem por receita. Passe o mouse para OTIF, lead time e frete do país.</p></div><div class='v'><em>Mercado x categoria</em><p>Cruza continente e categoria com lead time. Combinação de margem boa e lead time alto é candidata a revisar logística, não preço.</p></div></div></details>"
+			        & "<details><summary><span class='num'>07</span><span class='tit'>Profitability</span><span class='q'>Entre a receita bruta e a margem, onde o valor está sendo consumido?</span></summary><div class='body'><div class='v'><em>Ponte econômica detalhada</em><p>Da receita bruta à margem, coluna a coluna: descontos, custo de produto, frete, seguro, despesas. É o mapa completo do consumo de valor.</p></div><div class='v'><em>Formação da margem por categoria (cascata)</em><p>Quanto cada categoria adiciona ou subtrai da margem total.</p></div><div class='v'><em>Cliente: receita x margem</em><p>Dispersão. Clientes grandes e de margem baixa aparecem à direita e embaixo — são os que mais pesam na média.</p></div><div class='v'><em>Rentabilidade por vendedor e Incoterm</em><p>Frete % Receita e Desconto % lado a lado revelam se a margem cai por concessão comercial ou por estrutura logística.</p></div></div></details>"
+			        & "<details><summary><span class='num'>08</span><span class='tit'>Logistics</span><span class='q'>Onde a operação perde prazo e quanto isso custa por quilo?</span></summary><div class='body'><div class='v'><em>Painel com OTIF</em><p>A barra de OTIF tem marca nos 90%. Abaixo disso, o problema é sistêmico, não pontual.</p></div><div class='v'><em>Lead time real x previsto</em><p>Duas linhas. Gap constante significa previsão mal calibrada; gap crescente significa degradação real.</p></div><div class='v'><em>Motivos de atraso</em><p>Pareto dos motivos. Concentre esforço nos dois primeiros.</p></div><div class='v'><em>Rotas com maior incidência</em><p>Percentual de atraso por país de destino. Cruze com o volume: 40% de atraso numa rota pequena importa menos.</p></div><div class='v'><em>Performance por transportadora</em><p>OTIF por operador. Base de renegociação contratual.</p></div><div class='v'><em>Modal e porto de origem</em><p>Frete por quilo por combinação. Modal aéreo com frete/kg fora da curva pode indicar uso emergencial.</p></div></div></details>"
+			        & "<details><summary><span class='num'>09</span><span class='tit'>Sales Team</span><span class='q'>Quem entrega, quem depende de um único cliente e quem precisa de apoio?</span></summary><div class='body'><div class='v'><em>Quadrante: crescimento x atingimento</em><p>Cresce e bate meta (manter), cresce e não bate (meta agressiva), não cresce e bate (meta frouxa), nenhum dos dois (agir).</p></div><div class='v'><em>Realizado x meta por vendedor</em><p>Barras pareadas para a leitura direta do gap.</p></div><div class='v'><em>Dependência do maior cliente</em><p>Risco de carteira. Acima de 40% num único cliente, a saída dele derruba o vendedor — e o número não aparece em nenhum outro visual.</p></div><div class='v'><em>Ranking comercial</em><p>Consolidado com gap e clientes ativos.</p></div></div></details>"
+			        & "<details><summary><span class='num'>10</span><span class='tit'>Finance</span><span class='q'>Quanto do faturamento ainda não virou caixa e qual cliente trava o ciclo?</span></summary><div class='body'><div class='v'><em>Aging da carteira</em><p>Faixas de vencimento. O peso nas faixas acima de 90 dias é o que dificilmente se recupera.</p></div><div class='v'><em>Situação dos títulos</em><p>Pago, Pago em atraso, Parcial, Vencido, Em aberto. ""Pago em atraso"" não é inadimplência, mas é custo de capital de giro.</p></div><div class='v'><em>Saldo vencido por forma de pagamento</em><p>Identifica se a inadimplência está concentrada num instrumento — o que é problema de política, não de cliente.</p></div><div class='v'><em>Principais devedores</em><p>Dias médios de atraso e prazo médio por conta. Cruze com a página Customers: devedor que também é Campeão RFV pede negociação, não cobrança.</p></div></div></details>"
+			        & "<details><summary><span class='num'>11</span><span class='tit'>Forecast e Budget</span><span class='q'>Se a tendência continuar, fechamos o ano acima ou abaixo do compromisso?</span></summary><div class='body'><div class='v'><em>Linha temporal: realizado, orçado, forecast e meta</em><p>Quatro séries. O ponto onde forecast e meta divergem é a data em que a decisão precisa ser tomada.</p></div><div class='v'><em>Peso histórico de cada mês</em><p>Sazonalidade. Base para julgar se um mês fraco é problema ou calendário.</p></div><div class='v'><em>Realizado x orçado x forecast por região</em><p>Actual vs Budget por região e categoria, para saber onde o desvio se origina.</p></div></div></details>"
+			        & "<div class='sep'>Além das páginas</div>"
+			        & "<div class='x'><span class='tit'>Dicas de ferramenta</span><div class='how'>4 páginas de tooltip em HTML, acionadas ao passar o mouse</div><p>Cliente, Produto, Mercado e Vendedor. Cada uma traz identificação, 4 KPIs, barras de 12 meses e duas comparações específicas — margem alvo no produto, concentração de carteira no vendedor, OTIF no mercado. Escolha ditada pela dimensão que o visual agrupa, não pela página.</p></div>"
+			        & "<div class='x'><span class='tit'>Detalhe Cliente e Detalhe Mercado</span><div class='how'>Páginas de drill-through, botão direito sobre o item</div><p>Dossiê de página inteira do item selecionado: KPIs, histórico mensal, mix e detalhe tabular. O botão Voltar retorna à página de origem exata. Use quando a pergunta deixa de ser ""como isso se compara"" e vira ""o que está acontecendo aqui"".</p></div>"
+			        & "</div></div></div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: a735ed57-4890-c044-f8ce-c52dddebda62
+
+	/// Guia de analise (aba): ocupa a pagina inteira, sem botao. Usado na pagina 12.
+	measure 'HTML Guia de Analise Pagina' =
+			VAR _css = "<style>
+			*{box-sizing:border-box;margin:0;padding:0}
+			html,body{height:100%;background:transparent}
+			.g{height:100%;overflow-y:auto;font-family:'Segoe UI',system-ui,sans-serif;
+			   color:#16262C;padding:2px 6px 10px 2px}
+			.g::-webkit-scrollbar{width:7px}
+			.g::-webkit-scrollbar-thumb{background:rgba(14,42,51,.22);border-radius:99px}
+			.gh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+			    border-left:4px solid #C8763C;padding:2px 0 2px 11px;margin-bottom:6px}
+			.gh h1{font-size:19px;font-weight:700;color:#0E2A33;letter-spacing:-.01em}
+			.gh span{font-size:10px;color:#8C96A5}
+			.hint{font-size:11.5px;color:#5D6E75;margin:0 0 13px 15px}
+			.hint b{color:#0E2A33}
+			details{background:rgba(255,255,255,.66);border:1px solid rgba(227,224,217,.85);
+			        border-radius:9px;margin-bottom:8px;overflow:hidden}
+			details[open]{background:rgba(255,255,255,.82);border-color:rgba(200,118,60,.45)}
+			summary{cursor:pointer;list-style:none;padding:9px 13px;
+			        display:flex;align-items:baseline;gap:11px;user-select:none}
+			summary::-webkit-details-marker{display:none}
+			summary::after{content:'+';margin-left:auto;font-size:15px;color:#C8763C;
+			               font-weight:700;line-height:1}
+			details[open] summary::after{content:'–'}
+			summary:hover{background:rgba(200,118,60,.07)}
+			.num{font-size:10px;font-weight:700;letter-spacing:.05em;color:#FFF;
+			     background:#0E2A33;border-radius:4px;padding:2px 7px;flex:none}
+			details[open] .num{background:#C8763C}
+			.tit{font-size:13px;font-weight:700;color:#0E2A33;flex:none}
+			.q{font-size:11.5px;color:#8C96A5;font-style:italic;
+			   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+			.body{padding:2px 13px 12px;display:flex;flex-direction:column;gap:8px}
+			.v{display:grid;grid-template-columns:200px 1fr;gap:12px;align-items:baseline}
+			.v em{font-style:normal;font-size:11.5px;font-weight:600;color:#17495A}
+			.v p{font-size:11.5px;color:#5D6E75;line-height:1.55}
+			.sep{font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+			     color:#8C96A5;font-weight:700;margin:15px 0 7px 2px}
+			.x{background:rgba(23,73,90,.06);border:1px solid rgba(227,224,217,.85);
+			   border-left:4px solid #C8763C;border-radius:8px;
+			   padding:10px 13px;margin-bottom:8px}
+			.x .tit{display:block;margin-bottom:3px}
+			.x .how{font-size:10px;color:#8C96A5;margin-bottom:6px}
+			.x p{font-size:11.5px;color:#5D6E75;line-height:1.55}
+			</style>"
+			
+			VAR _html =
+			    _css
+			        & "<div class='g'>"
+			        & "<div class='gh'><h1>Guia de análise</h1><span>11 páginas · 4 dicas de ferramenta · 2 dossiês</span></div>"
+			        & "<div class='hint'>Clique em qualquer página para <b>expandir</b> o detalhe dos visuais e o que cada um permite analisar.</div>"
+			        & "<details><summary><span class='num'>01</span><span class='tit'>Executive Overview</span><span class='q'>Estamos crescendo, atingindo meta e preservando rentabilidade?</span></summary><div class='body'><div class='v'><em>Painel de 8 KPIs</em><p>Leitura de 3 segundos. As barras de 12 meses mostram se o número atual é ponto fora da curva ou tendência. A barra de Atingimento tem marca nos 100%: à esquerda dela, o ano está em risco.</p></div><div class='v'><em>Receita mensal: realizado x ano anterior x meta</em><p>Compare as três linhas. Realizado acima do ano anterior mas abaixo da meta significa que a meta subiu mais rápido que a operação.</p></div><div class='v'><em>Receita por mercado (mapa)</em><p>Concentração geográfica. Poucos países escuros = risco de dependência.</p></div><div class='v'><em>De onde veio a variação YoY (cascata)</em><p>Atribui o crescimento por continente. Serve para responder ""crescemos por quê"" — não é o mesmo que ""onde vendemos mais"".</p></div><div class='v'><em>Destaques por mercado</em><p>Cruza crescimento, margem e atingimento. Procure linhas com receita alta e margem baixa.</p></div></div></details>"
+			        & "<details><summary><span class='num'>02</span><span class='tit'>Sales Performance</span><span class='q'>O ritmo comercial está acima ou abaixo do compromisso assumido?</span></summary><div class='body'><div class='v'><em>Realizado mensal e atingimento acumulado</em><p>A coluna é o mês, a linha é o acumulado. A linha cruzando 100% no meio do ano indica meta subdimensionada.</p></div><div class='v'><em>Região comercial: realizado x meta</em><p>Barras pareadas. Região que bate meta com receita pequena pode ter meta frouxa.</p></div><div class='v'><em>Receita por executivo comercial</em><p>Ranking. Passe o mouse para ver a ficha do vendedor.</p></div><div class='v'><em>Decomposição por canal e categoria</em><p>A coluna Contribuição para Crescimento mostra quanto cada combinação puxou o total — não confunda com crescimento próprio.</p></div></div></details>"
+			        & "<details><summary><span class='num'>03</span><span class='tit'>Customers</span><span class='q'>Quem sustenta a receita, quem está escapando e quanto isso custa?</span></summary><div class='body'><div class='v'><em>Pareto de clientes</em><p>Barras por cliente e linha do acumulado. Onde a linha cruza 80% está sua dependência real.</p></div><div class='v'><em>Distribuição RFV da carteira</em><p>Campeões, Leais, Em Risco, Hibernando, Perdidos. Blocos grandes em Em Risco e Hibernando são receita ainda recuperável.</p></div><div class='v'><em>Receita por classe ABC</em><p>Concentração por valor. Compare com o RFV: classe A em situação Em Risco é a combinação mais cara.</p></div><div class='v'><em>Clientes ativos por porte</em><p>Série temporal por porte. Queda em um porte específico aponta problema de proposta, não de mercado.</p></div><div class='v'><em>Carteira detalhada</em><p>Ordene por Recência para achar risco: recência alta com receita alta é conta escapando.</p></div></div></details>"
+			        & "<details><summary><span class='num'>04</span><span class='tit'>Customer Potential</span><span class='q'>Onde existe receita não capturada e qual conta merece prioridade?</span></summary><div class='body'><div class='v'><em>Receita x Share of Wallet (dispersão)</em><p>O tamanho da bolha é o potencial. Bolha grande à esquerda = muito potencial, pouca penetração. É a região de maior retorno.</p></div><div class='v'><em>Ranking de oportunidade</em><p>O Score de Oportunidade pondera gap absoluto contra baixa penetração — prioriza quem tem espaço e ainda não foi trabalhado.</p></div><div class='v'><em>White space por segmento</em><p>Categorias que o segmento poderia comprar e não compra. Cruze com Penetração de Categorias.</p></div><div class='v'><em>Penetração por categoria</em><p>Quantos clientes compram cada categoria. Categoria com poucos compradores e margem boa é candidata a cross-sell.</p></div></div></details>"
+			        & "<details><summary><span class='num'>05</span><span class='tit'>Products</span><span class='q'>Qual portfólio cresce com rentabilidade e qual cresce destruindo margem?</span></summary><div class='body'><div class='v'><em>Matriz BCG adaptada</em><p>Crescimento no eixo x, margem no y, tamanho = receita. O quadrante inferior direito — cresce muito, margem baixa — é o que merece revisão de preço.</p></div><div class='v'><em>Receita e margem por categoria</em><p>Barras pareadas. Categoria com receita alta e margem em valor baixa está sendo vendida barato demais.</p></div><div class='v'><em>Evolução da margem por categoria</em><p>Tendência. Margem caindo de forma consistente indica erosão de preço, não sazonalidade.</p></div><div class='v'><em>Portfólio por SKU</em><p>Classe ABC e margem por quilo. Margem/kg é o indicador mais honesto num negócio de exportação por peso.</p></div></div></details>"
+			        & "<details><summary><span class='num'>06</span><span class='tit'>Markets</span><span class='q'>Quais mercados sustentam hoje e quais sustentarão os próximos anos?</span></summary><div class='body'><div class='v'><em>Market Opportunity Matrix</em><p>Crescimento x margem por país. O canto superior direito é onde investir; o inferior esquerdo, onde revisar a operação.</p></div><div class='v'><em>Distribuição global (mapa)</em><p>Leitura geográfica da concentração.</p></div><div class='v'><em>Ranking de mercados</em><p>Ordem por receita. Passe o mouse para OTIF, lead time e frete do país.</p></div><div class='v'><em>Mercado x categoria</em><p>Cruza continente e categoria com lead time. Combinação de margem boa e lead time alto é candidata a revisar logística, não preço.</p></div></div></details>"
+			        & "<details><summary><span class='num'>07</span><span class='tit'>Profitability</span><span class='q'>Entre a receita bruta e a margem, onde o valor está sendo consumido?</span></summary><div class='body'><div class='v'><em>Ponte econômica detalhada</em><p>Da receita bruta à margem, coluna a coluna: descontos, custo de produto, frete, seguro, despesas. É o mapa completo do consumo de valor.</p></div><div class='v'><em>Formação da margem por categoria (cascata)</em><p>Quanto cada categoria adiciona ou subtrai da margem total.</p></div><div class='v'><em>Cliente: receita x margem</em><p>Dispersão. Clientes grandes e de margem baixa aparecem à direita e embaixo — são os que mais pesam na média.</p></div><div class='v'><em>Rentabilidade por vendedor e Incoterm</em><p>Frete % Receita e Desconto % lado a lado revelam se a margem cai por concessão comercial ou por estrutura logística.</p></div></div></details>"
+			        & "<details><summary><span class='num'>08</span><span class='tit'>Logistics</span><span class='q'>Onde a operação perde prazo e quanto isso custa por quilo?</span></summary><div class='body'><div class='v'><em>Painel com OTIF</em><p>A barra de OTIF tem marca nos 90%. Abaixo disso, o problema é sistêmico, não pontual.</p></div><div class='v'><em>Lead time real x previsto</em><p>Duas linhas. Gap constante significa previsão mal calibrada; gap crescente significa degradação real.</p></div><div class='v'><em>Motivos de atraso</em><p>Pareto dos motivos. Concentre esforço nos dois primeiros.</p></div><div class='v'><em>Rotas com maior incidência</em><p>Percentual de atraso por país de destino. Cruze com o volume: 40% de atraso numa rota pequena importa menos.</p></div><div class='v'><em>Performance por transportadora</em><p>OTIF por operador. Base de renegociação contratual.</p></div><div class='v'><em>Modal e porto de origem</em><p>Frete por quilo por combinação. Modal aéreo com frete/kg fora da curva pode indicar uso emergencial.</p></div></div></details>"
+			        & "<details><summary><span class='num'>09</span><span class='tit'>Sales Team</span><span class='q'>Quem entrega, quem depende de um único cliente e quem precisa de apoio?</span></summary><div class='body'><div class='v'><em>Quadrante: crescimento x atingimento</em><p>Cresce e bate meta (manter), cresce e não bate (meta agressiva), não cresce e bate (meta frouxa), nenhum dos dois (agir).</p></div><div class='v'><em>Realizado x meta por vendedor</em><p>Barras pareadas para a leitura direta do gap.</p></div><div class='v'><em>Dependência do maior cliente</em><p>Risco de carteira. Acima de 40% num único cliente, a saída dele derruba o vendedor — e o número não aparece em nenhum outro visual.</p></div><div class='v'><em>Ranking comercial</em><p>Consolidado com gap e clientes ativos.</p></div></div></details>"
+			        & "<details><summary><span class='num'>10</span><span class='tit'>Finance</span><span class='q'>Quanto do faturamento ainda não virou caixa e qual cliente trava o ciclo?</span></summary><div class='body'><div class='v'><em>Aging da carteira</em><p>Faixas de vencimento. O peso nas faixas acima de 90 dias é o que dificilmente se recupera.</p></div><div class='v'><em>Situação dos títulos</em><p>Pago, Pago em atraso, Parcial, Vencido, Em aberto. ""Pago em atraso"" não é inadimplência, mas é custo de capital de giro.</p></div><div class='v'><em>Saldo vencido por forma de pagamento</em><p>Identifica se a inadimplência está concentrada num instrumento — o que é problema de política, não de cliente.</p></div><div class='v'><em>Principais devedores</em><p>Dias médios de atraso e prazo médio por conta. Cruze com a página Customers: devedor que também é Campeão RFV pede negociação, não cobrança.</p></div></div></details>"
+			        & "<details><summary><span class='num'>11</span><span class='tit'>Forecast e Budget</span><span class='q'>Se a tendência continuar, fechamos o ano acima ou abaixo do compromisso?</span></summary><div class='body'><div class='v'><em>Linha temporal: realizado, orçado, forecast e meta</em><p>Quatro séries. O ponto onde forecast e meta divergem é a data em que a decisão precisa ser tomada.</p></div><div class='v'><em>Peso histórico de cada mês</em><p>Sazonalidade. Base para julgar se um mês fraco é problema ou calendário.</p></div><div class='v'><em>Realizado x orçado x forecast por região</em><p>Actual vs Budget por região e categoria, para saber onde o desvio se origina.</p></div></div></details>"
+			        & "<div class='sep'>Além das páginas</div>"
+			        & "<div class='x'><span class='tit'>Dicas de ferramenta</span><div class='how'>4 páginas de tooltip em HTML, acionadas ao passar o mouse</div><p>Cliente, Produto, Mercado e Vendedor. Cada uma traz identificação, 4 KPIs, barras de 12 meses e duas comparações específicas — margem alvo no produto, concentração de carteira no vendedor, OTIF no mercado. Escolha ditada pela dimensão que o visual agrupa, não pela página.</p></div>"
+			        & "<div class='x'><span class='tit'>Detalhe Cliente e Detalhe Mercado</span><div class='how'>Páginas de drill-through, botão direito sobre o item</div><p>Dossiê de página inteira do item selecionado: KPIs, histórico mensal, mix e detalhe tabular. O botão Voltar retorna à página de origem exata. Use quando a pergunta deixa de ser ""como isso se compara"" e vira ""o que está acontecendo aqui"".</p></div>"
+			        & "</div>"
+			RETURN
+			    _html
+		displayFolder: 17 Paineis HTML
+		lineageTag: 27414ca9-cfdf-522e-cab4-31cf4b00775c
+
+	column Coluna
+		dataType: int64
+		isHidden
+		lineageTag: ed88568b-d4a7-376b-4dab-eeb8e1a81228
+		summarizeBy: none
+		sourceColumn: Coluna
+
+	partition _Medidas = m
+		mode: import
+		source =
+				let
+				    Origem = #table(type table [Coluna = Int64.Type], {{1}})
+				in
+				    Origem
+
+	annotation PBI_ResultType = Table
+

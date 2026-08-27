@@ -1,0 +1,14 @@
+﻿TransportadoraID;Transportadora;ModalPrincipal;Pais;AvaliacaoFornecedor;LeadTimeMedio;Status
+1;Meridian Blue Lines;Maritimo;Dinamarca;4,6;26;Ativo
+2;Pacifica Container Lines;Maritimo;Cingapura;4,3;31;Ativo
+3;Atlantis Cargo Maritima;Maritimo;Brasil;4,1;24;Ativo
+4;Nordwind Shipping AG;Maritimo;Alemanha;4,5;25;Ativo
+5;Oceanica Sul Navegacao;Maritimo;Brasil;3,6;29;Ativo
+6;Vela Marittima S.p.A.;Maritimo;Italia;3,9;28;Ativo
+7;Global Reach Freight;Maritimo;Paises Baixos;4,4;26;Ativo
+8;Andes Cargo Line;Maritimo;Chile;3,4;21;Em Revisao
+9;SkyBridge Air Cargo;Aereo;Estados Unidos;4,7;6;Ativo
+10;AeroLusitana Cargo;Aereo;Portugal;4,2;7;Ativo
+11;Condor Air Logistics;Aereo;Brasil;4,0;6;Ativo
+12;TransPampa Rodoviaria;Rodoviario;Brasil;3,8;9;Ativo
+13;Ruta Sur Transportes;Rodoviario;Argentina;3,5;11;Ativo

@@ -1,0 +1,14 @@
+# Normaliza fim de linha entre maquinas (recomendacao para projetos PBIP).
+* text=auto
+
+# TMDL e JSON do PBIR: o Desktop grava CRLF, manter assim evita diff inteiro
+# a cada save de quem abrir no Windows.
+*.tmdl   text eol=crlf
+*.json   text eol=crlf
+*.pbip   text eol=crlf
+*.pbir   text eol=crlf
+*.pbism  text eol=crlf
+
+# Dados e binarios
+*.csv    text eol=lf
+*.png    binary

@@ -1,0 +1,83 @@
+table dTransportadora
+	/// Dimensao de operadores logisticos internacionais.
+	lineageTag: b5c7d358-a03b-e5e2-5016-08e18978cfba
+
+	column TransportadoraID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 58650abd-7ea3-fb8f-11ae-a8ef712afb19
+		summarizeBy: none
+		sourceColumn: TransportadoraID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Transportadora
+		dataType: string
+		lineageTag: 9febe9e2-868e-b1b7-4d53-7520b56159c6
+		summarizeBy: none
+		sourceColumn: Transportadora
+
+		annotation SummarizationSetBy = Automatic
+
+	column ModalPrincipal
+		dataType: string
+		lineageTag: 67e38d21-7751-9ebb-c69a-5319bb90f53a
+		summarizeBy: none
+		sourceColumn: ModalPrincipal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pais
+		dataType: string
+		lineageTag: ea1f1eb4-82f5-51d2-ba56-e8e8d7e3773d
+		summarizeBy: none
+		sourceColumn: Pais
+
+		annotation SummarizationSetBy = Automatic
+
+	column AvaliacaoFornecedor
+		dataType: double
+		formatString: #,0.00
+		lineageTag: eaa33783-b548-e2a1-2a32-b9e32f7204a1
+		summarizeBy: sum
+		sourceColumn: AvaliacaoFornecedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeMedio
+		dataType: int64
+		formatString: #,0
+		lineageTag: 8a17d989-0f77-bfca-080e-1761bbfae6a4
+		summarizeBy: sum
+		sourceColumn: LeadTimeMedio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: ac512b8a-2dc7-776e-2e29-6deb6e938da1
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dTransportadora = m
+		mode: import
+		source =
+				let
+                    Origem = Csv.Document(
+                        File.Contents(pBasePath & "dTransportadora.csv"),
+                        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+                    ),
+                    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+                    TiposAplicados = Table.TransformColumnTypes(
+                        CabecalhoPromovido,
+                        {{"TransportadoraID", Int64.Type},{"Transportadora", type text},{"ModalPrincipal", type text},{"Pais", type text},{"AvaliacaoFornecedor", type number},{"LeadTimeMedio", Int64.Type},{"Status", type text}},
+                        "pt-BR"
+                    ),
+                    ErrosRemovidos = Table.RemoveRowsWithErrors(TiposAplicados)
+                in
+                    ErrosRemovidos
+
+	annotation PBI_ResultType = Table

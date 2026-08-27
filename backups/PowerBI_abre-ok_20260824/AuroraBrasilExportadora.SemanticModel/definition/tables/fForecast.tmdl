@@ -1,0 +1,129 @@
+/// Fato de forecast com revisoes periodicas (Jan/Mai/Set) na granularidade mes x regiao x categoria.
+table fForecast
+	lineageTag: bc3b6e6d-f001-32e4-0811-24feaa445b1a
+
+	column Data
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: bc0d48d2-7b45-2a02-76a8-29fd203bbcf7
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AnoMesNumero
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 91dcf324-833a-9a7b-8972-df628f749a49
+		summarizeBy: none
+		sourceColumn: AnoMesNumero
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnoMes
+		dataType: string
+		lineageTag: b73e73a0-01c2-94c3-d901-eb20ec098c17
+		summarizeBy: none
+		sourceColumn: AnoMes
+		sortByColumn: AnoMesNumero
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano
+		dataType: int64
+		formatString: #,0
+		lineageTag: 1054ca7b-8eb9-b315-e33a-7f0d09a02e74
+		summarizeBy: sum
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: int64
+		formatString: #,0
+		lineageTag: 52ca35c4-5f49-c3c4-01b5-65e92c1f0363
+		summarizeBy: sum
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Regiao
+		dataType: string
+		lineageTag: 6e1f79e9-ccb5-e6c0-5967-0e709d783290
+		summarizeBy: none
+		sourceColumn: Regiao
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: f3735570-71fb-9959-af29-fb58b5ab5345
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReceitaForecastUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 7779b942-e76f-1845-1d3d-163a97c62191
+		summarizeBy: sum
+		sourceColumn: ReceitaForecastUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column MargemForecastUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 4b2e27c6-7434-d648-57c0-dcec92e11ecb
+		summarizeBy: sum
+		sourceColumn: MargemForecastUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column VolumeForecastKg
+		dataType: double
+		formatString: #,0.00
+		lineageTag: d7e84916-6cfa-e147-d93a-2227445f556c
+		summarizeBy: sum
+		sourceColumn: VolumeForecastKg
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataForecast
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3195eab8-23e3-b85c-f320-ad2bed93912e
+		summarizeBy: none
+		sourceColumn: DataForecast
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition fForecast = m
+		mode: import
+		source =
+				let
+				    Origem = Csv.Document(
+				        File.Contents(pBasePath & "fForecast.csv"),
+				        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+				    TiposAplicados = Table.TransformColumnTypes(
+				        CabecalhoPromovido,
+				        {{"Data", type date},{"AnoMesNumero", Int64.Type},{"AnoMes", type text},{"Ano", Int64.Type},{"Mes", Int64.Type},{"Regiao", type text},{"Categoria", type text},{"ReceitaForecastUSD", type number},{"MargemForecastUSD", type number},{"VolumeForecastKg", type number},{"DataForecast", type date}},
+				        "pt-BR"
+				    ),
+				    ErrosTratados = Table.ReplaceErrorValues(
+				        TiposAplicados,
+				        List.Transform(Table.ColumnNames(TiposAplicados), each {_, null})
+				    )
+				in
+				    ErrosTratados
+
+	annotation PBI_ResultType = Table
+

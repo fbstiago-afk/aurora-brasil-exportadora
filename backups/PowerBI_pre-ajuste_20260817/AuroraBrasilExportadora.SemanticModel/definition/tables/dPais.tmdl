@@ -1,0 +1,115 @@
+table dPais
+	/// Dimensao geografica de mercados de destino, com risco, lead time e tarifa media de importacao.
+	lineageTag: 4a6447f6-cf0e-d4e4-5dee-62b3b6b6df9e
+
+	column PaisID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 091b0853-cf83-3f2b-af98-05726005c434
+		summarizeBy: none
+		sourceColumn: PaisID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pais
+		dataType: string
+		lineageTag: 1d29dc31-34e4-45a9-5e78-cf76f6daea1a
+		summarizeBy: none
+		sourceColumn: Pais
+
+		annotation SummarizationSetBy = Automatic
+
+	column CodigoISO
+		dataType: string
+		lineageTag: 9740a69b-8c39-474e-6ebc-99c796f14095
+		summarizeBy: none
+		sourceColumn: CodigoISO
+
+		annotation SummarizationSetBy = Automatic
+
+	column Continente
+		dataType: string
+		lineageTag: 5fa8ef2c-da67-5201-8d29-77239bbdb4c5
+		summarizeBy: none
+		sourceColumn: Continente
+
+		annotation SummarizationSetBy = Automatic
+
+	column Regiao
+		dataType: string
+		lineageTag: dcd4c4ad-489b-1000-3a95-b30d7b9ff507
+		summarizeBy: none
+		sourceColumn: Regiao
+
+		annotation SummarizationSetBy = Automatic
+
+	column Moeda
+		dataType: string
+		lineageTag: 8b5a4d95-3f98-e3f7-fb4e-c9dc7dab6791
+		summarizeBy: none
+		sourceColumn: Moeda
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdiomaPrincipal
+		dataType: string
+		lineageTag: f2fb5dfa-cf44-8eda-5b26-31f71e297c93
+		summarizeBy: none
+		sourceColumn: IdiomaPrincipal
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClassificacaoMercado
+		dataType: string
+		lineageTag: 63152e9f-aff7-2ecd-e4c3-5a67240f4f6c
+		summarizeBy: none
+		sourceColumn: ClassificacaoMercado
+
+		annotation SummarizationSetBy = Automatic
+
+	column RiscoPais
+		dataType: string
+		lineageTag: 2d866309-70ae-5cff-4bd9-7762036642c5
+		summarizeBy: none
+		sourceColumn: RiscoPais
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeMedio
+		dataType: int64
+		formatString: #,0
+		lineageTag: bcbbe34e-8dae-b2b7-eb2f-02ec8d008003
+		summarizeBy: sum
+		sourceColumn: LeadTimeMedio
+
+		annotation SummarizationSetBy = Automatic
+
+	column TarifaMediaImportacao
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 6ba78b71-ce8e-843f-a63f-3c9179570b43
+		summarizeBy: sum
+		sourceColumn: TarifaMediaImportacao
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dPais = m
+		mode: import
+		source =
+				let
+                    Origem = Csv.Document(
+                        File.Contents(pBasePath & "dPais.csv"),
+                        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+                    ),
+                    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+                    TiposAplicados = Table.TransformColumnTypes(
+                        CabecalhoPromovido,
+                        {{"PaisID", Int64.Type},{"Pais", type text},{"CodigoISO", type text},{"Continente", type text},{"Regiao", type text},{"Moeda", type text},{"IdiomaPrincipal", type text},{"ClassificacaoMercado", type text},{"RiscoPais", type text},{"LeadTimeMedio", Int64.Type},{"TarifaMediaImportacao", type number}},
+                        "pt-BR"
+                    ),
+                    ErrosRemovidos = Table.RemoveRowsWithErrors(TiposAplicados)
+                in
+                    ErrosRemovidos
+
+	annotation PBI_ResultType = Table

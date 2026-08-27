@@ -1,0 +1,131 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "customTheme": {
+      "name": "AuroraBrasilTheme.json",
+      "reportVersionAtImport": {
+        "visual": "2.11.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "publicCustomVisuals": [
+    "htmlContent443BE3AD55E043BF878BED274D3A6855"
+  ],
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "AuroraBrasilTheme.json",
+          "path": "AuroraBrasilTheme.json",
+          "type": "CustomTheme"
+        },
+        {
+          "name": "capa_aurora5150800185645201.png",
+          "path": "capa_aurora5150800185645201.png",
+          "type": "Image"
+        },
+        {
+          "name": "ChatGPT_Image_17_de_ago._de_209125536223211208.png",
+          "path": "ChatGPT_Image_17_de_ago._de_209125536223211208.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora15820758678544267.png",
+          "path": "ladpageaurora15820758678544267.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora2343792262754434.png",
+          "path": "ladpageaurora2343792262754434.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora2587596577764312.png",
+          "path": "ladpageaurora2587596577764312.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora4128977243959068.png",
+          "path": "ladpageaurora4128977243959068.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora47589579423339445.png",
+          "path": "ladpageaurora47589579423339445.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora4805251931145552.png",
+          "path": "ladpageaurora4805251931145552.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora4924804491481223.png",
+          "path": "ladpageaurora4924804491481223.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora6032170067751935.png",
+          "path": "ladpageaurora6032170067751935.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora7571313216859015.png",
+          "path": "ladpageaurora7571313216859015.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora9507289387537659.png",
+          "path": "ladpageaurora9507289387537659.png",
+          "type": "Image"
+        },
+        {
+          "name": "ladpageaurora9639523955598119.png",
+          "path": "ladpageaurora9639523955598119.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultFilterActionIsDataFilter": true,
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true
+  }
+}

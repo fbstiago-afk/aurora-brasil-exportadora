@@ -1,0 +1,10 @@
+/// Diretorio raiz dos arquivos CSV. Altere apenas aqui para apontar o projeto
+/// para a pasta sincronizada do Google Drive (ex.: "G:\\Meu Drive\\Aurora Brasil Exportadora\\dados\\").
+expression pBasePath = "E:\Projetos BI\02 - Aurora Exportação\dados\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: e34f3c0a-f395-f5fc-625b-f15b077228eb
+	queryGroup: '00 Parametros'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

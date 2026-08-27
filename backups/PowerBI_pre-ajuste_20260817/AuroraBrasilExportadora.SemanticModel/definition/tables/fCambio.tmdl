@@ -1,0 +1,67 @@
+table fCambio
+	/// Fato de cotacoes diarias por moeda contra o BRL.
+	lineageTag: 7672f973-a216-40bc-f2ff-792580328d4e
+
+	column Data
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: a64053c5-87c4-a62a-587b-49143abd0fee
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+	column Moeda
+		dataType: string
+		lineageTag: e339cde5-d087-33cd-8ecb-4ca2f17bc9f2
+		summarizeBy: none
+		sourceColumn: Moeda
+
+		annotation SummarizationSetBy = Automatic
+
+	column TaxaBRL
+		dataType: double
+		formatString: #,0.00
+		lineageTag: d1f39661-1ca6-0f04-3094-846287f01dc3
+		summarizeBy: sum
+		sourceColumn: TaxaBRL
+
+		annotation SummarizationSetBy = Automatic
+
+	column VariacaoDia
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 165a3c65-2ac9-fb49-fee9-d33df460a057
+		summarizeBy: sum
+		sourceColumn: VariacaoDia
+
+		annotation SummarizationSetBy = Automatic
+
+	column VariacaoMes
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 45364a1e-2e64-282c-17c8-5dccd9d3b8f9
+		summarizeBy: sum
+		sourceColumn: VariacaoMes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fCambio = m
+		mode: import
+		source =
+				let
+                    Origem = Csv.Document(
+                        File.Contents(pBasePath & "fCambio.csv"),
+                        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+                    ),
+                    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+                    TiposAplicados = Table.TransformColumnTypes(
+                        CabecalhoPromovido,
+                        {{"Data", type date},{"Moeda", type text},{"TaxaBRL", type number},{"VariacaoDia", type number},{"VariacaoMes", type number}},
+                        "pt-BR"
+                    ),
+                    ErrosRemovidos = Table.RemoveRowsWithErrors(TiposAplicados)
+                in
+                    ErrosRemovidos
+
+	annotation PBI_ResultType = Table

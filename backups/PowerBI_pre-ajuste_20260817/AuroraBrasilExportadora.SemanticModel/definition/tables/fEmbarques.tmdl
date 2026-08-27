@@ -1,0 +1,230 @@
+table fEmbarques
+	/// Fato logistico na granularidade pedido embarcado.
+	lineageTag: 60d36459-3455-91fe-a7fe-169adee4ea36
+
+	column EmbarqueID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 2db3ba1e-7bcf-bc76-ffce-832d2ddd03e7
+		summarizeBy: none
+		sourceColumn: EmbarqueID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PedidoID
+		dataType: string
+		lineageTag: 9071bd18-e8c6-c135-0483-b3566e4d1b53
+		summarizeBy: none
+		sourceColumn: PedidoID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClienteID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: b88270b7-f8ed-f5b4-44c9-4e7ad4d0c6f8
+		summarizeBy: none
+		sourceColumn: ClienteID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaisDestinoID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 7cae2082-ec60-5e4b-6a58-4caeb55df80c
+		summarizeBy: none
+		sourceColumn: PaisDestinoID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PortoOrigemID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: e0bafc61-875a-95b1-1410-7c940334d09e
+		summarizeBy: none
+		sourceColumn: PortoOrigemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PortoDestinoID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 260c1f41-3620-9ba8-82a2-19b5539e238f
+		summarizeBy: none
+		sourceColumn: PortoDestinoID
+
+		annotation SummarizationSetBy = Automatic
+
+	column TransportadoraID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: d89b8d7d-6d5b-130f-755a-ff117dd5bf42
+		summarizeBy: none
+		sourceColumn: TransportadoraID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataPrevistaEmbarque
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 6953bf90-8816-9429-fe0a-a519b0a687d9
+		summarizeBy: none
+		sourceColumn: DataPrevistaEmbarque
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataRealEmbarque
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 502de930-3953-a25c-cc1e-ab0208623f4a
+		summarizeBy: none
+		sourceColumn: DataRealEmbarque
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataPrevistaEntrega
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: a677a1af-583f-89b8-4113-5b2ea7e21d88
+		summarizeBy: none
+		sourceColumn: DataPrevistaEntrega
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataRealEntrega
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 6c4dfba3-3560-4e07-7ec8-11cfadeaf331
+		summarizeBy: none
+		sourceColumn: DataRealEntrega
+
+		annotation SummarizationSetBy = Automatic
+
+	column Modal
+		dataType: string
+		lineageTag: af3bf852-04e9-c8c2-7892-7d0c0e4316f1
+		summarizeBy: none
+		sourceColumn: Modal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Container
+		dataType: string
+		lineageTag: f4ffea59-be01-bb9a-7a04-c5fc94604e27
+		summarizeBy: none
+		sourceColumn: Container
+
+		annotation SummarizationSetBy = Automatic
+
+	column TipoContainer
+		dataType: string
+		lineageTag: 929f4641-638a-2f86-312f-fbd569bccb92
+		summarizeBy: none
+		sourceColumn: TipoContainer
+
+		annotation SummarizationSetBy = Automatic
+
+	column PesoKg
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 1387b7c3-ff4e-1132-7443-753ffb9efc90
+		summarizeBy: sum
+		sourceColumn: PesoKg
+
+		annotation SummarizationSetBy = Automatic
+
+	column VolumeM3
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 30a652c6-7212-3207-4a31-dc10f1948eab
+		summarizeBy: sum
+		sourceColumn: VolumeM3
+
+		annotation SummarizationSetBy = Automatic
+
+	column FreteUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 9bf9e164-3316-fea9-4ef7-2f360965f6ac
+		summarizeBy: sum
+		sourceColumn: FreteUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column SeguroUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 247aa332-1588-e3e4-41c1-c469d91ca9e9
+		summarizeBy: sum
+		sourceColumn: SeguroUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimePrevisto
+		dataType: int64
+		formatString: #,0
+		lineageTag: 08edc1fa-5d22-1075-c7a1-a6d294f4c7f2
+		summarizeBy: sum
+		sourceColumn: LeadTimePrevisto
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeReal
+		dataType: int64
+		formatString: #,0
+		lineageTag: 6000a00d-e2b2-39a9-67af-ac006c40ac79
+		summarizeBy: sum
+		sourceColumn: LeadTimeReal
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiasAtraso
+		dataType: int64
+		formatString: #,0
+		lineageTag: 4a03f8b0-c762-3ab8-72c2-92b29327418b
+		summarizeBy: sum
+		sourceColumn: DiasAtraso
+
+		annotation SummarizationSetBy = Automatic
+
+	column StatusEmbarque
+		dataType: string
+		lineageTag: 04b18de5-e9e9-b294-fd63-219b9e095a86
+		summarizeBy: none
+		sourceColumn: StatusEmbarque
+
+		annotation SummarizationSetBy = Automatic
+
+	column MotivoAtraso
+		dataType: string
+		lineageTag: 84a67ac0-6c99-fc2f-3272-142109fe5970
+		summarizeBy: none
+		sourceColumn: MotivoAtraso
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fEmbarques = m
+		mode: import
+		source =
+				let
+                    Origem = Csv.Document(
+                        File.Contents(pBasePath & "fEmbarques.csv"),
+                        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+                    ),
+                    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+                    TiposAplicados = Table.TransformColumnTypes(
+                        CabecalhoPromovido,
+                        {{"EmbarqueID", Int64.Type},{"PedidoID", type text},{"ClienteID", Int64.Type},{"PaisDestinoID", Int64.Type},{"PortoOrigemID", Int64.Type},{"PortoDestinoID", Int64.Type},{"TransportadoraID", Int64.Type},{"DataPrevistaEmbarque", type date},{"DataRealEmbarque", type date},{"DataPrevistaEntrega", type date},{"DataRealEntrega", type date},{"Modal", type text},{"Container", type text},{"TipoContainer", type text},{"PesoKg", type number},{"VolumeM3", type number},{"FreteUSD", type number},{"SeguroUSD", type number},{"LeadTimePrevisto", Int64.Type},{"LeadTimeReal", Int64.Type},{"DiasAtraso", Int64.Type},{"StatusEmbarque", type text},{"MotivoAtraso", type text}},
+                        "pt-BR"
+                    ),
+                    ErrosRemovidos = Table.RemoveRowsWithErrors(TiposAplicados)
+                in
+                    ErrosRemovidos
+
+	annotation PBI_ResultType = Table

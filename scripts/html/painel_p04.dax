@@ -1,0 +1,68 @@
+VAR _fim = MAX ( dCalendario[Data] )
+VAR _serie =
+    ADDCOLUMNS (
+        CALCULATETABLE (
+            VALUES ( dCalendario[AnoMesNumero] ),
+            DATESINPERIOD ( dCalendario[Data], _fim, -12, MONTH )
+        ),
+        "@s0", CALCULATE ( [Receita 12M] )
+    )
+VAR _mn0 = MINX ( _serie, [@s0] )
+VAR _mx0 = MAXX ( _serie, [@s0] )
+VAR _pt0 =
+    CONCATENATEX (
+        _serie,
+        "<i style='height:"
+            & FORMAT ( 12 + DIVIDE ( [@s0] - _mn0, _mx0 - _mn0, 0.5 ) * 88, "0", "en-US" )
+            & "%'></i>",
+        "",
+        dCalendario[AnoMesNumero], ASC
+    )
+VAR _c2 = IF ( [Share of Wallet] >= 0.4, "#1F8A70", IF ( [Share of Wallet] >= 0.25, "#D9A441", "#C0453B" ) )
+
+VAR _css = "<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:transparent;overflow:hidden}
+.ab{height:100%;display:grid;grid-auto-rows:1fr;gap:clamp(5px,.62vw,11px);font-family:'Segoe UI',system-ui,sans-serif}
+.t{background:rgba(255,255,255,.65);border:1px solid rgba(227,224,217,.65);border-radius:clamp(5px,.6vw,9px);padding:clamp(6px,.7vw,11px) clamp(8px,.85vw,14px);display:flex;flex-direction:column;gap:.15em;overflow:hidden;position:relative}
+.t:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#C8763C;opacity:.9}
+.t.b:before{background:#17495A}
+.t.g:before{background:#8FA98F}
+.lb{font-size:clamp(7.5px,.66vw,10px);letter-spacing:.06em;text-transform:uppercase;color:#5D6E75;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vl{font-size:clamp(14px,1.6vw,26px);font-weight:700;color:#0E2A33;line-height:1.05;letter-spacing:-.015em;white-space:nowrap}
+.dt{font-size:clamp(7.5px,.66vw,10px);font-weight:600;display:flex;align-items:baseline;gap:.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#5D6E75}
+.dt em{font-style:normal;color:#8C96A5;font-weight:500}
+.spk{display:flex;align-items:flex-end;gap:clamp(1px,.12vw,2.5px);flex:1;min-height:clamp(11px,1.3vw,24px);margin-top:.2em}
+.spk i{flex:1 1 0;background:currentColor;border-radius:1.5px 1.5px 0 0;opacity:.9;min-width:1px}
+.spk i:last-child{opacity:1}
+.bar{position:relative;height:clamp(4px,.4vw,7px);background:rgba(233,225,212,.7);border-radius:99px;margin-top:auto;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+.bar u{position:absolute;top:0;bottom:0;width:1.5px;background:#0E2A33;opacity:.5}
+</style>"
+
+VAR _html =
+    _css
+        & "<div class='ab' style=""grid-template-columns:repeat(4,1fr)"">"
+        & "<div class='t'><div class='lb'>Receita 12 Meses</div>"
+            & "<div class='vl'" & ">" & IF ( ABS ( [Receita 12M] ) >= 1E9, "US$ " & FORMAT ( [Receita 12M] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Receita 12M] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+            & "<div class='dt'" & ">" & "<em>últimos 12 meses</em>" & "</div>"
+            & "<div class='spk' style='color:#C8763C'>" & _pt0 & "</div>"
+            & "</div>"
+        & "<div class='t b'><div class='lb'>Potencial Estimado</div>"
+            & "<div class='vl'" & ">" & IF ( ABS ( [Potencial Anual USD] ) >= 1E9, "US$ " & FORMAT ( [Potencial Anual USD] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Potencial Anual USD] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+            & "<div class='dt'" & ">" & "<em>estimativa da base</em>" & "</div>"
+            & "</div>"
+        & "<div class='t g'><div class='lb'>Share of Wallet</div>"
+            & "<div class='vl'" & " style='color:" & _c2 & "'" & ">" & FORMAT ( [Share of Wallet], "0.0%", "pt-BR" ) & "</div>"
+            & "<div class='dt'" & ">" & "<em>receita / potencial</em>" & "</div>"
+            & "<div class='bar'><i style='width:"
+            & FORMAT ( MIN ( MAX ( [Share of Wallet], 0 ), 1 ) / 1 * 100, "0.0", "en-US" )
+            & "%;background:" & _c2 & "'></i><u style='left:40.0%'></u></div>"
+            & "</div>"
+        & "<div class='t'><div class='lb'>Gap Não Capturado</div>"
+            & "<div class='vl'" & ">" & IF ( ABS ( [Potencial Nao Capturado] ) >= 1E9, "US$ " & FORMAT ( [Potencial Nao Capturado] / 1E9, "#,0.0", "pt-BR" ) & " Bi", "US$ " & FORMAT ( [Potencial Nao Capturado] / 1E6, "#,0.0", "pt-BR" ) & " Mi" ) & "</div>"
+            & "<div class='dt'" & ">" & "<em>espaço para crescer</em>" & "</div>"
+            & "</div>"
+        & "</div>"
+RETURN
+    _html

@@ -1,0 +1,21 @@
+﻿VendedorID;CodigoVendedor;NomeVendedor;Cargo;Gerente;RegiaoResponsavel;ContinenteResponsavel;DataAdmissao;MetaAnualUSD;Status
+1;VD001;Ricardo Salgueiro Mendes;Diretor Comercial;;Global;Global;2015-07-03;0,0;Ativo
+2;VD002;Beatriz Continho Alvarenga;Gerente Regional;Ricardo Salgueiro Mendes;America do Norte;America do Norte;2016-03-16;10000000,0;Ativo
+3;VD003;Henrique Vasconcelos Pires;Gerente Regional;Ricardo Salgueiro Mendes;Europa;Europa;2022-01-06;9000000,0;Ativo
+4;VD004;Mariana Toledo Guimaraes;Gerente Regional;Ricardo Salgueiro Mendes;Asia-Pacifico;Asia;2020-03-21;15000000,0;Ativo
+5;VD005;Rodrigo Alencastro Paiva;Gerente Regional;Ricardo Salgueiro Mendes;America Latina;America Latina;2021-06-12;12000000,0;Ativo
+6;VD006;Fernanda Quintela Bastos;Gerente Regional;Ricardo Salgueiro Mendes;Oriente Medio e Africa;Oriente Medio;2019-09-23;13000000,0;Ativo
+7;VD007;Lucas Bittencourt Ferraz;Executivo de Contas;Beatriz Continho Alvarenga;America do Norte;America do Norte;2019-02-05;4700000,0;Ativo
+8;VD008;Camila Ostrowski Nunes;Executivo de Contas;Beatriz Continho Alvarenga;America do Norte;America do Norte;2018-06-18;3100000,0;Ativo
+9;VD009;Gustavo Peixoto Andrade;Executivo de Contas;Henrique Vasconcelos Pires;Europa Ocidental;Europa;2018-10-04;3100000,0;Ativo
+10;VD010;Isabela Marchetti Rangel;Executivo de Contas;Henrique Vasconcelos Pires;Europa Ocidental;Europa;2019-03-25;3500000,0;Ativo
+11;VD011;Thiago Bandeira Cordeiro;Executivo de Contas;Henrique Vasconcelos Pires;Europa do Sul;Europa;2022-03-10;4400000,0;Ativo
+12;VD012;Aline Furtado Bezerra;Executivo de Contas;Henrique Vasconcelos Pires;Europa Central e Norte;Europa;2022-11-04;3200000,0;Ativo
+13;VD013;Eduardo Sampaio Vilela;Executivo de Contas;Mariana Toledo Guimaraes;Asia Oriental;Asia;2015-06-18;2600000,0;Ativo
+14;VD014;Patricia Nakamura Ribeiro;Executivo de Contas;Mariana Toledo Guimaraes;Asia Oriental;Asia;2021-03-27;6100000,0;Ativo
+15;VD015;Vinicius Caldeira Rocha;Executivo de Contas;Mariana Toledo Guimaraes;Oceania e Sudeste Asiatico;Oceania;2019-02-19;4500000,0;Ativo
+16;VD016;Larissa Amorim Tavares;Executivo de Contas;Rodrigo Alencastro Paiva;Cone Sul;America Latina;2018-12-04;4500000,0;Ativo
+17;VD017;Marcelo Duarte Siqueira;Executivo de Contas;Rodrigo Alencastro Paiva;Andina e Mexico;America Latina;2020-10-01;5700000,0;Inativo
+18;VD018;Juliana Espindola Braga;Executivo de Contas;Fernanda Quintela Bastos;Golfo;Oriente Medio;2022-07-21;5000000,0;Ativo
+19;VD019;Rafael Monteiro Lacerda;Executivo de Contas;Fernanda Quintela Bastos;Africa e Levante;Oriente Medio;2019-12-25;5800000,0;Ativo
+20;VD020;Carolina Bragantini Reis;Executivo de Contas;Beatriz Continho Alvarenga;America do Norte;America do Norte;2017-09-28;5700000,0;Ativo

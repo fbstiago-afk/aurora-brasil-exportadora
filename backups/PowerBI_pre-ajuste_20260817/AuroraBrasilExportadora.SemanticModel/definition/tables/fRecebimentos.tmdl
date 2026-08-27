@@ -1,0 +1,130 @@
+table fRecebimentos
+	/// Fato financeiro de contas a receber na granularidade invoice.
+	lineageTag: d13dae00-6a2e-42c3-e7ac-4349404ae2e1
+
+	column RecebimentoID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 30448caa-48ef-77a2-3309-b28bab965cd1
+		summarizeBy: none
+		sourceColumn: RecebimentoID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Invoice
+		dataType: string
+		lineageTag: 3fd22b92-1cb8-9538-94ab-36a7c43c8b67
+		summarizeBy: none
+		sourceColumn: Invoice
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClienteID
+		dataType: int64
+		formatString: #,0
+		isHidden
+		lineageTag: 52fb14fe-c087-db80-7904-e96e132673a1
+		summarizeBy: none
+		sourceColumn: ClienteID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataFaturamento
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 64695164-f77f-681e-c5f5-57d34a84b800
+		summarizeBy: none
+		sourceColumn: DataFaturamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataVencimento
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: b8d6d8fc-cfd8-2701-6786-000818a9c03d
+		summarizeBy: none
+		sourceColumn: DataVencimento
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataPagamento
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: d1ad74da-cd4d-20b1-7b70-e4a8aeec5319
+		summarizeBy: none
+		sourceColumn: DataPagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	column ValorUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 0bf49db9-9f0e-573f-c907-a7a76ac69b01
+		summarizeBy: sum
+		sourceColumn: ValorUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column ValorRecebidoUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: dd0253af-64bc-61b8-e913-c22a8ca20695
+		summarizeBy: sum
+		sourceColumn: ValorRecebidoUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column SaldoUSD
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 0cdfa63f-11d0-0bd9-e83a-ead33881ab6a
+		summarizeBy: sum
+		sourceColumn: SaldoUSD
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 8388c9ea-7d70-898f-fa48-69eddadc6c16
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiasAtraso
+		dataType: int64
+		formatString: #,0
+		lineageTag: 3ecea570-c84f-78e8-e5ce-67f1a3af9184
+		summarizeBy: sum
+		sourceColumn: DiasAtraso
+
+		annotation SummarizationSetBy = Automatic
+
+	column FormaPagamento
+		dataType: string
+		lineageTag: dfd988ce-dd85-565c-4f79-299947d89825
+		summarizeBy: none
+		sourceColumn: FormaPagamento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fRecebimentos = m
+		mode: import
+		source =
+				let
+                    Origem = Csv.Document(
+                        File.Contents(pBasePath & "fRecebimentos.csv"),
+                        [Delimiter = ";", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+                    ),
+                    CabecalhoPromovido = Table.PromoteHeaders(Origem, [PromoteAllScalars = true]),
+                    TiposAplicados = Table.TransformColumnTypes(
+                        CabecalhoPromovido,
+                        {{"RecebimentoID", Int64.Type},{"Invoice", type text},{"ClienteID", Int64.Type},{"DataFaturamento", type date},{"DataVencimento", type date},{"DataPagamento", type date},{"ValorUSD", type number},{"ValorRecebidoUSD", type number},{"SaldoUSD", type number},{"Status", type text},{"DiasAtraso", Int64.Type},{"FormaPagamento", type text}},
+                        "pt-BR"
+                    ),
+                    ErrosRemovidos = Table.RemoveRowsWithErrors(TiposAplicados)
+                in
+                    ErrosRemovidos
+
+	annotation PBI_ResultType = Table
