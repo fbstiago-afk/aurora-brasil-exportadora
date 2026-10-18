@@ -1,9 +1,0 @@
-# ---- midia pesada: o video vai para o LinkedIn, nao para o repositorio ----
-*.mp4
-*.mov
-*.avi
-
-# ---- sistema ----
-Thumbs.db
-desktop.ini
-.DS_Store

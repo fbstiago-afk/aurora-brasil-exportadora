@@ -1,5 +1,12 @@
 # Aurora Brasil Exportadora — Dashboard Executivo em Power BI
 
+<!-- portfolio-link:start -->
+[![Ver no portfólio](https://img.shields.io/badge/Ver%20o%20painel%20no%20portf%C3%B3lio-Bocardi%20Data-6C3BAA?style=for-the-badge)](https://bocardidata.base44.app/ProjectDetail?id=6a9037768f19cf0df82696d2)
+
+> 🔗 **Quer ver o visual do Power BI?** Acesse a página do projeto no portfólio: **[https://bocardidata.base44.app/ProjectDetail?id=6a9037768f19cf0df82696d2](https://bocardidata.base44.app/ProjectDetail?id=6a9037768f19cf0df82696d2)**
+<!-- portfolio-link:end -->
+
+
 Dashboard executivo completo para uma exportadora brasileira de alimentos premium, construído do
 zero: da geração da base sintética ao modelo dimensional, das medidas DAX ao storytelling visual.
 
